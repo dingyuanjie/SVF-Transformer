@@ -1,0 +1,11 @@
+[project]
+name = "svf-transformer"
+version = "0.1.0"
+description = "A minimal stable baseline for a Structural Vital Force Transformer."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["torch>=2.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

@@ -1,0 +1,60 @@
+SVF-Transformer BPE Evaluation
+checkpoint: svf_bpe_transformer.pt
+device: cuda
+seed: 42
+max_new_tokens: 160
+temperature: 0.9
+top_k: 80
+repetition_penalty: 1.12
+frequency_penalty: 0.18
+presence_penalty: 0.06
+no_repeat_ngram_size: 10
+
+================================================================================
+Prompt 1: Memory Compression
+--------------------------------------------------------------------------------
+Memory Compression. Attention compression lets the model read relevant summaries without replaying the entire buffer. The same principle appears in the generation samples. Disabling memory tests whether compressed summaries improve generated text or only add noise.
+
+Structural Conservation. Disabling memory tests whether compressed summaries improve generated lasts for smoke tests whether energy control contributes to stable training. Disabling memory tests whether compressed summaries improve generated instead of full activation histories. Checkpoints should be saved often enough that a long run can be resumed after interruption. Generation samples should use fixed prompts so changes across checkpoints are easy to compare. A careful baseline keeps this mechanism visible. Disabling memory tests whether compressed summaries improve generated sections. The goal is a model that can be trained, measured, and compared.
+
+Experiment: conservation weight sweep. The run compares several conservation weights while keeping the dataset,
+
+================================================================================
+Prompt 2: Attractor Dynamics
+--------------------------------------------------------------------------------
+Attractor Dynamics. The conservation loss measures the change in structural energy between consecutive core states. This matters during long training runs. Generation samples should use fixed prompts so changes across checkpoints are easy to compare. The result should be judged by loss curves, energy traces, and prompt-conditioned samples.
+
+The persistent core is designed to preserve a compact structural summary across batches. The persistent core is designed to update slowly, so it can carry context without destabilizing the backbone. The persistent core is designed to be small, bounded, and easy to inspect during debugging. Clear prompts make it easier to compare checkpoints across training runs.
+
+Question: How does attractor dynamics improve stability?
+Answer: If the pull is too weak, structural energy may drift upward during long runs. Attractor dynamics pull the evolving core state toward a learned
+
+================================================================================
+Prompt 3: In this experiment, structural conservation is evaluated by
+--------------------------------------------------------------------------------
+In this experiment, structural conservation is evaluated by pairing scalar metrics with fixed prompt samples. In this experiment, structural conservation is evaluated by pairing over memory allows the model to recover relevant traces when they help generation. The important point is that every mechanism should be measurable.
+
+In this experiment, structural conservation is evaluated by tracking energy changes between core states. In this experiment, structural conservation is evaluated?
+Answer: The goal is not perfectly constant energy, but controlled and interpretable state movement. A useful evaluation report includes language loss, structural energy, conservation loss, and generated samples. Structural conservation is evaluated by comparing the energy of consecutive core states. The goal is not perfectly constant energy, but compares topic drift, but controlled and interpretable state movement.
+
+Question: What makes a good SVF experiment?
+Answer: The strongest conclusions come from ablations rather
+
+================================================================================
+Prompt 4: A stable SVF model should
+--------------------------------------------------------------------------------
+A stable SVF model should make its internal dynamics measurable through energy and conservation metrics. A stable SVF model should remain simple enough that every added mechanism can be tested by ablation. Clear prompts make it easier to compare checkpoints across training runs.
+
+A stable SVF model should remain simple enough that every activation histories. A stable SVF model should generate coherent technical paragraphs without repeating one sentence too often. A stable SVF model should remain simple enough applies bounded. The report should describe both successful behavior and failure cases.
+
+Question: How does attractor dynamics improve stability?
+Answer: If the pull is too strong, the core can become rigid and stop carrying useful context. Attractor dynamics pull the evolving core state toward a learned reference point. If the pull is too weak, structural energy may drift upward during long runs. If the pull is too
+
+================================================================================
+Prompt 5: The persistent core is designed to
+--------------------------------------------------------------------------------
+The persistent core is designed to update slowly, so it can carry context without destabilizing the backbone. The persistent core is designed to preserve a compact structural summary across batches. The important point is that every mechanism should be measurable.
+
+The persistent core is designed to update slowly, not force a compact structural summary across batches. The persistent core is designed to update slowly, so changes one mechanism at a time and records its effect on stability. A good SVF experiment changes one mechanism at a time and records its internal dynamics measurable through energy and conservation metrics.
+
+The persistent core is designed to preserve a compact structuralule successful run compares the result against a phrase composition. It should report speed, memory usage, prediction loss, structural energy, and sample quality. The practical consequence is straightforward. Checkpoints should be saved often enough that a long run

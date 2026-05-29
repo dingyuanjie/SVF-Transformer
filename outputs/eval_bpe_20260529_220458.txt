@@ -1,0 +1,52 @@
+SVF-Transformer BPE Evaluation
+checkpoint: svf_bpe_transformer.pt
+device: cuda
+seed: 42
+max_new_tokens: 160
+temperature: 0.9
+top_k: 80
+repetition_penalty: 1.12
+frequency_penalty: 0.18
+presence_penalty: 0.06
+no_repeat_ngram_size: 10
+
+================================================================================
+Prompt 1: Memory Compression
+--------------------------------------------------------------------------------
+Memory Compression. A good memory experiment compares generation quality with memory enabled and disabled. The next experiment should isolate this factor. A cleaner corpus should contain coherent paragraphs rather than isolated shuffled statements.
+
+Persistent Core Design. A useful implementation keeps the core small enough to inspect during experiments. It should not replace the Transformer backbone; it only adds a slow structural channel. The persistent core is a compact state that carries information across training batches. A careful baseline keeps this mechanism visible. The best ablation table includes speed, memory usage, loss, and sample quality. This section treats the mechanism as an engineering constraint rather than a metaphor.
+
+Failure Analysis. Each failure should lead to one controlled change, not a large bundle of unrelated edits. Broken phrases can come from character-level tokenization, small context windows, or overly
+
+================================================================================
+Prompt 2: Attractor Dynamics
+--------------------------------------------------------------------------------
+Attractor Dynamics. Checkpoints should be saved often enough that a long run can be resumed after interruption. The next experiment should isolate this factor. Checkpoints should be saved often enough that a a long run can be resumed after interruption. This section treats the mechanism as an engineering constraint rather than a metaphor.
+
+Failure Analysis. Numeric artifacts often appear when synthetic paragraph numbers are treated as normal tokens. Broken phrases can come from character-level tokenization, small context windows, or overly aggressive sampling. A cleaner corpus should contain coherent paragraphs rather than isolated shuffled statements. Each failure should lead to one controlled change, not a large bundle of unrelated edits. This matters during long training runs. Checkpoints should be saved often enough that ateadtead phrases can come from character-level tokenization, energy between consecutive core states. The result should be
+
+================================================================================
+Prompt 3: In this experiment, structural conservation is evaluated by
+--------------------------------------------------------------------------------
+In this experiment, structural conservation is evaluated by loss curves, energy traces, and prompt-conditioned samples. The result should be judged by loss curves, energy traces, and prompt scalar whether the model learns token patterns in the corpus. A careful baseline keeps this mechanism visible. Numeric artifacts often appear when synthetic paragraph numbers are treated as normal tokens. The result should be judged by loss curvesconditioned samples.
+
+Structural Conservation. If conservation spikes repeatedly, the run should be inspected for an excessive learning rate or drift scale. Its purpose is not to make energy constant, but to discourage sudden jumps that destabilize training. If conservation remains small while prediction loss decreases, the structural path is behaving well. This matters during long training runs. It should not replace the Transformer backbone; it only adds a slow structural channel. The goal is a model that can be trained
+
+================================================================================
+Prompt 4: A stable SVF model should
+--------------------------------------------------------------------------------
+A stable SF model should make the context length can increase to test longer dependencies. A careful baseline keeps this mechanism visible. After the baseline is stable, the context length can increase to test longer dependencies dependencies. This section treats the mechanism as an engineering constraint rather than a metaphor.
+
+Structural Conservation. If conservation spikes repeatedly, the run should be inspected for an excessive learning rate or drift scale. The best baseline reports conservation next to language loss so failures are visible early. Its purpose is not to make energy constant, but to discourage sudden jumps that destabilize training. If conservation remains small while prediction loss decreases, the structural path is behaving well. A careful baseline keeps this mechanism visible. Attention compression lets the model read relevant summaries without replaying the entire buffer.
+
+Training Curriculum. Checkpoints should be saved often enough that a long run
+
+================================================================================
+Prompt 5: The persistent core is designed to
+--------------------------------------------------------------------------------
+The persistent core is designed to test longer dependencies. A careful baseline keeps this mechanism visible. A cleaner corpus should contain coherent paragraphs rather than isolated shuffled statements. Stable behavior is more important than adding another speculative module.
+
+Structural Conservation. Its purpose is not to make energy constant, but to discourage sudden jumps that destabilize training. The best baseline reports conservation next to language loss so failures are visible early. If conservation remains small while prediction loss decreases, the structural path is behaving well. The practical consequence is straightforward. After the baseline is stable, the context length can increase to test longer dependencies.
+
+Evaluation Protocol. Prediction loss shows whether the model learns token patterns in the corpus. Structural energy shows whether the persistent state is growing, shrinking, or stabilizing. Generated text reveals repetition, topic drift, and broken transitions that scalar metrics can

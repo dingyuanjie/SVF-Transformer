@@ -1,0 +1,62 @@
+SVF-Transformer BPE Evaluation
+checkpoint: svf_bpe_transformer.pt
+device: cuda
+seed: 42
+max_new_tokens: 160
+temperature: 0.9
+top_k: 80
+repetition_penalty: 1.12
+frequency_penalty: 0.18
+presence_penalty: 0.06
+no_repeat_ngram_size: 10
+
+================================================================================
+Prompt 1: Memory Compression
+--------------------------------------------------------------------------------
+Memory Compression point is that every mechanism should be measurable. The important point is that every mechanism should be measurable.
+
+Question: What makes a good SVF experiment?
+Answer: A good SVF experiment changes one mechanism at a time and records its effect on stability. It should report speed, memory usage, prediction loss, structural energy, and sample quality. The strongest conclusions come from ablations rather than from a single successful run. The experiment should compare checkpoints using fixed prompts and fixed generation settings.
+
+Experiment: conservation weight sweep. The run compares several conservation weights while keeping the dataset, optimizer, and model size fixed. A low weight may allow useful movement but can also permit energy drift. A high weight can reduce drift but may make the core too passive. The best setting keeps conservation visible without dominating token prediction
+
+================================================================================
+Prompt 2: Attractor Dynamics
+--------------------------------------------------------------------------------
+Attractor ynamics worse. Clear prompts make it easier to compare checkpoints across training runs.
+
+Question: What makes a good SVF experiment?
+Answer: The strongest conclusions come from ablations rather than from a single successful run. A good SVF experiment changes one mechanism at a time and records its effect on stability. It should report speed, memory usage, prediction loss, structural energy, and sample quality.
+
+Experiment: tokenizer comparison. The character-level model is useful for smoke tests but often breaks spelling. The word-level model improves spelling but struggles with flexible phrase composition. The BPE model is the best default because it balances spelling, vocabulary size, and generalization. The same prompts should be evaluated across all tokenizers to make the comparison fair. This design choice keeps the system close to ordinary engineering practice.
+
+
+
+================================================================================
+Prompt 3: In this experiment, structural conservation is evaluated by
+--------------------------------------------------------------------------------
+In this experiment, structural conservation is evaluated by tracking energy changes between core states. In this experiment, structural conservation is evaluated by comparing loss curves with energy traces. The important point is that every mechanism should be measurable.
+
+In this experiment, structural conservation is evaluated by comparing the core moves gradually during training. In this experiment, structural conservation is evaluated successful behavior and records its effect on a single GPU. The report should describe both successful behavior and failure cases.
+
+Experiment: memory-enabled generation. The model generates samples with memory enabled and then repeats the same prompts with memory disabled. The report compares topic continuity, repeated phrases, and transitions between sections. Memory is useful only if it improves the sample without adding stale summaries. A bounded ring buffer makes the experiment practical on a single GPU. Clear prompts make it easier to compare checkpoints across training
+
+================================================================================
+Prompt 4: A stable SVF model should
+--------------------------------------------------------------------------------
+A stable SVF model should generate coherent technical paragraphs without repeating one sentence too often. A stable SVF model should reduce prediction loss while keeping structural energy bounded. The report should describe both successful behavior and failure cases.
+
+A stable SVF model should generate coherent technical paragraphs keeps the system close to ordinary engineering practice. A stable SVF model should remain simple enough that every added mechanism can be tested by ablation. The important point is that every mechanism should be measurable.
+
+Experiment: persistent core ablation. The baseline model is trained with the persistent core enabled and then trained again with the core removed. The comparison checks whether the core improves continuity across generated paragraphs. If the core helps, fixed prompts should produce fewer abrupt topic changes. If the core hurts, structural energy may look stable while language loss or sample quality becomes worse. Clear prompts make
+
+================================================================================
+Prompt 5: The persistent core is designed to
+--------------------------------------------------------------------------------
+The persistent core is designed to support continuity rather than replace attention. The important point is that every mechanism should be measurable.
+
+Question: What makes a good SVF experiment?
+Answer: It should report speed, memory usage, prediction loss, structural energy, and sample quality. A good SVF experiment changes one mechanism at a time and records its effect on stability. The strongest conclusions come from ablations rather than from a single successful run. The experiment should compare checkpoints using fixed prompts and fixed generation settings.
+
+In this experiment, structural conservation is evaluated by tracking energy changes between core states. In this experiment, structural conservation is evaluated by comparing loss curves with energy traces. In this experiment, structural conservation is evaluated is evaluated by pairing scalar metrics with fixed prompt samples. Clear prompts make it easier to compare checkpoints across training runs.
+

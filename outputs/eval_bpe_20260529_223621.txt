@@ -1,0 +1,60 @@
+SVF-Transformer BPE Evaluation
+checkpoint: svf_bpe_best.pt
+device: cuda
+seed: 42
+max_new_tokens: 140
+temperature: 0.85
+top_k: 60
+repetition_penalty: 1.15
+frequency_penalty: 0.22
+presence_penalty: 0.08
+no_repeat_ngram_size: 12
+
+================================================================================
+Prompt 1: Memory Compression
+--------------------------------------------------------------------------------
+Memory Compression. Attention compression lets the model read relevant summaries without replaying the entire buffer. The practical consequence is straightforward. Ring buffer memory stores summaries instead of full activation histories. This keeps memory bounded even when the training run lasts for many thousands of steps.
+
+Question: What should memory compression do?
+Answer: Memory compression should summarize useful history without replaying every activation. A good SVF experiment changes one mechanism at a time and records its effect on stability. The strongest conclusions come from ablations rather than from a single successful run. The experiment should compare checkpoints using fixed prompts and fixed generation settings.
+
+Failure Analysis. Broken phrases can come from character-level tokenization, small context windows, or overly aggressive sampling.
+
+================================================================================
+Prompt 2: Attractor Dynamics
+--------------------------------------------------------------------------------
+Attractor Dynamics. Attractor dynamics provide a stabilizing reference for the evolving structural state. When the attractor strength is too low, structural energy may drift upward for many updates. This matters during long training runs. The batch size should grow only after GPU memory usage is understood.
+
+Question: What makes a good SVF experiment?
+Answer: A good SVF experiment changes one mechanism at a time and records its effect on stability. It should report speed, memory usage, prediction loss, structural energy, and sample quality. The strongest conclusions come from ablations rather than from a single successful run.
+
+Persistent Core Design. The persistent core is a compact state that carries information across training batches. This design gives the model continuity without
+
+================================================================================
+Prompt 3: In this experiment, structural conservation is evaluated by
+--------------------------------------------------------------------------------
+In this experiment, structural conservation is evaluated by pairing scalar metrics with fixed prompt samples. In this experiment, structural conservation is evaluated by tracking energy changes between core states. The report should describe both successful behavior and failure cases.
+
+Question: What makes a good SVF experiment?
+Answer: It should report speed, memory usage, prediction loss, structural energy, and sample quality. A good SVF experiment changes one mechanism at a time and records its effect on stability. The strongest conclusions come from ablations rather than from a single successful run.
+
+Failure Analysis. Each failure should lead to one controlled change, not a large bundle of unrelated edits phrases can come from character-level tokenization, small context windows, or overly aggressive sampling. Numeric artifacts often
+
+================================================================================
+Prompt 4: A stable SVF model should
+--------------------------------------------------------------------------------
+A stable SVF model should make its internal dynamics measurable through energy and conservation metrics. A stable SVF model should generate coherent technical paragraphs without repeating one sentence too often. The important point is that every mechanism should be measurable.
+
+Question: What makes a good SVF experiment?
+Answer: It should report speed, memory usage, prediction loss, structural energy, and sample quality. The strongest conclusions come from ablations rather than from a single successful run. A good SVF experiment changes one mechanism at a time and records its effect on stability.
+
+Persistent Core Design. This design gives the model continuity without storing an unlimited history of tokens. The update rule combines a batch summary with the previous core state, then applies bounded drift. It
+
+================================================================================
+Prompt 5: The persistent core is designed to
+--------------------------------------------------------------------------------
+The persistent core is designed to preserve a compact structural summary across batches. The important point is that every mechanism should be measurable.
+
+Question: What makes a good SVF experiment?
+Answer: A good SVF experiment changes one mechanism at a time and records its effect on stability. The strongest conclusions come from ablations rather than from a single successful run. It should report speed, memory usage, prediction loss, structural energy, and sample quality. The experiment should compare checkpoints using fixed prompts and fixed generation settings.
+Ablation Strategy. Removing the conservation term tests whether energy control contributes to stable training. An ablation study removes one structural component at a time and compares the result against the baseline. Disabling memory tests whether compressed summaries improve generated text or

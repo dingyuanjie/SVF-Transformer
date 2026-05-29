@@ -1,0 +1,38 @@
+SVF-Transformer BPE Evaluation
+checkpoint: svf_bpe_best.pt
+device: cuda
+seed: 42
+max_new_tokens: 160
+temperature: 0.85
+top_k: 60
+repetition_penalty: 1.15
+frequency_penalty: 0.22
+presence_penalty: 0.08
+no_repeat_ngram_size: 12
+
+================================================================================
+Prompt 1: Memory Compression
+--------------------------------------------------------------------------------
+Memory Compression when each added component improves a measured behavior.
+
+Its purpose is to discourage abrupt jumps that make the structural path difficult to interpret. The engineering value comes from being able to remove the mechanism and compare the resultededededededededed fail dur dur dur dur dur dur dur dur dur dur dur dursarurtsurtsurtsurtsesigesigesigesigesigesigesigesigesigesigesigesig over compressed memory car car car car car car car car car carinaryinaryinaryinaryinaryinaryinaryinaryinaryinaryinaryinaryototototototototototototferferferferferferferferferferferfer en en en enrrconditionconditionconditionconditionconditionconditionconditionconditionconditionconditionconditionconditionreakreakreakreak F F F F F F F F
+
+================================================================================
+Prompt 2: Attractor Dynamics
+--------------------------------------------------------------------------------
+Attractor ynamicsGP comp compousnessousnessulduldulduldulduldulduld report places conservation next to prediction loss, generated samples, and memory usage. The engineering value comes from being able to remove the modelinaryinaryinaryinaryinaryinaryinary or make every state identicalsarurtsurts dur dur dur dur dur dur dur dur dur dur dur duredededededededededededed m m m m m m m m m m m m compatact practence fail fail fail fail fail fail fail failtacttact-level subword piecestacttacttact dur dur dur dur dur dur dur dur dur dur dur improvement is best checkpointrrrrrrrrrrrrreakreakreakreakreakreakreakreak sequence modeling large large large large large large large large large largetact
+
+================================================================================
+Prompt 3: In this experiment, structural conservation is evaluated by
+--------------------------------------------------------------------------------
+In this experiment, structural conservation is evaluated by tracking changes in core energy across updates. loss rather than a larger system whose behavior cannot be isolated. The engineering value comes from being able to remove the mechanism and compare the result dur dur dur dur dur dur dur dur dur dur dur dured repres dur dur dur dur dur dur dur dur dur dur durvidinaryinaryinaryinaryinaryinaryinaryinaryinaryinaryinaryinary orinaryinaryinaryinaryinaryinaryinaryinaryinaryinaryinaryesigesigesigesigesigesigesigesig over compressed memory can recover relevant traces when they helpreakreakreakreakreakreakreakreakreakreakreakreak sequencedledledledledledle subword piecestact dur dur dur dur dur dur dur dur dur dur dur overdodododododododomalmalmalrotigigigigigigigigigig
+
+================================================================================
+Prompt 4: A stable SVF model should
+--------------------------------------------------------------------------------
+A stable SVF model should stay close enough to a plain Transformer that a baseline comparison remains meaningful. loss rather than by the final training step alone.dleinaryinaryinaryinaryinaryinaryinaryinaryinaryinaryinaryinary or make every state identicalreakigigigigigigigigigigigigseful dur dur dur dur dur dur dur dur dur dur dur dur over compressed memory can recover relevant traces when they helput dur dur dur dur dur dur dur dur dur dur duredededededededededededed-level subword piecestact dur dur dur dur dur dur dur dur dur dur durasasasasasasasasas dur dur dur dur dur dur dur dur dur dur durmalmalmalmalmalmalmalmalrrrototototototototototot
+
+================================================================================
+Prompt 5: The persistent core is designed to
+--------------------------------------------------------------------------------
+The persistent core is designed to preserve a compact structural summary across batches. It updates more slowly than token activations, which allows it to carry continuity without replacing attentionsarinaryinaryinaryinaryinaryinaryinaryinaryinaryinaryinaryinary meaningful. The engineering value comes from being able to remove the mechanism and compare the result dur dur dur dur dur dur dur dur dur dur dur duredededededededaraara aux aux aux aux aux aux aux aux aux aux aux auxedededededededededededed m m m m m m m m m m m mtacttacttacttact dur dur dur dur dur dur dur dur dur dur durododododedededededededededededatedatedatedatedatedatedatedatedatedatedatednderstinaryinaryinaryinaryinaryinary

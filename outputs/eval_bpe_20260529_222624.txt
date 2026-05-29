@@ -1,0 +1,58 @@
+SVF-Transformer BPE Evaluation
+checkpoint: svf_bpe_transformer.pt
+device: cuda
+seed: 42
+max_new_tokens: 160
+temperature: 0.9
+top_k: 80
+repetition_penalty: 1.12
+frequency_penalty: 0.18
+presence_penalty: 0.06
+no_repeat_ngram_size: 10
+
+================================================================================
+Prompt 1: Memory Compression
+--------------------------------------------------------------------------------
+Memory Compression. Ring buffer memory stores summaries instead of full activation histories. Ring buffer memory experiment compares generation quality with memory enabled and disabled. Ring buffer memory stores summaries instead of full histories. The next experiment should isolate this factor. Ring buffer memory stores summaries instead of full compare checkpoints using fixed prompts and fixed generation settings. The result should be judged by loss curves, energy traces, and prompt-conditioned samples.
+
+Experiment: conservation weight sweep. The run compares several conservation weights while keeping the dataset, optimizer, and model size fixed. A low weight may allow useful movement but can also permit energy drift. A high weight can reduce drift but may make the core too passive. The best setting keeps conservation visible without dominating token prediction. Clear prompts make it easier to compare checkpoints across training runs.
+
+The persistent
+
+================================================================================
+Prompt 2: Attractor Dynamics
+--------------------------------------------------------------------------------
+Attractor Dynamics.
+
+Question: Why does the persistent core exist?
+Answer: The persistent core is designed to carry a compact summary across batches without storing the full history. The core should remain small enough to inspect, reset, and ablate during experiments. The persistent core is designed to carry a compact state that carries information across training batches without storing the full history. It gives the model a slow state channel that can preserve structural context beyond a single sequence window.
+
+Experiment: tokenizer comparison. The character-level model is useful for smoke tests but often breaks spelling. The word-level model improves spelling but struggles with flexible phrase composition. The BPE model is the best default because it balances spelling, vocabulary size, and generalization. A high weight may allow useful movement but can also permit energy drift. This matters
+
+================================================================================
+Prompt 3: In this experiment, structural conservation is evaluated by
+--------------------------------------------------------------------------------
+In this experiment, structural conservation is evaluated by tracking energy changes between core states. In this experiment, structural conservation is evaluated by pairing scalar metrics with fixed prompt samples. In this experiment, structural conservation is evaluated?
+Answer: The report should describe both successful behavior and failure cases. A good SVF experiment changes one mechanism at a time and records its effect on stability. The strongest conclusions come from ablations rather than from a single successful run. It should report speed, memory usage, prediction loss, structural energy, and sample quality.
+
+A stable SVF model should reduce prediction loss while keeping structural energy bounded. A stable SVF model should remain simple enough that every added mechanism can be tested by ablation. This design choice keeps the system close to ordinary engineering practice.
+
+Experiment: tokenizer comparison. The character-level model is useful for smoke tests but
+
+================================================================================
+Prompt 4: A stable SVF model should
+--------------------------------------------------------------------------------
+A stable SVF model should remain simple enough that every added mechanism can be tested by ablation. A stable SVF model should make its internal dynamics measurable through energy and conservation metrics. The report should describe both successful behavior and failure cases.
+
+A stable SVF model should make its internal dynamics measurable that everylim baseline straightforward. Removing the persistent core tests whether long-Transformer is a Transformer research baseline with a persistent structural state improves continuity. The persistent core is a compact state that carries information across training batches. The implementation should make this behavior measurable. Removing the conservation term tests whether energy control contributes to stable training.
+
+Experiment: conservation weight sweep. The run compares several conservation weights while keeping the dataset, optimizer, and model size fixed. A low weight may allow useful movement but can also permit energy drift. A high weight can reduce
+
+================================================================================
+Prompt 5: The persistent core is designed to
+--------------------------------------------------------------------------------
+The persistent core is designed to preserve a compact structural summary across batches. The persistent core is designed to preserve a compact structural old summaries with newer summaries.
+
+The persistent core is designed to preserve a compact summary across batches. The persistent core is designed designed to preserve a compact structural summary across batches look stable while still discouraging runaway motion. This design choice keeps the system close to ordinary engineering practice.
+
+Attractor Dynamics. A practical setting should make the pull visible in metrics but gentle in the forward pass. When the attractor strength is too high, the core can become too rigid to carry useful context. Attractor dynamics provide a stabilizing reference for the evolving structural state. When the attractor strength is too low, structural energy may drift upward for many updates. The next experiment should isolate this factor. If conservation spikes repeatedly, the run should be
