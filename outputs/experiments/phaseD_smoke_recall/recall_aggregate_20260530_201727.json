@@ -1,0 +1,26 @@
+[
+  {
+    "delay_tokens": 16,
+    "variant": "persistent_core",
+    "runs": 1,
+    "mean_val_ce_loss": 46.5789909362793,
+    "std_val_ce_loss": 0.0,
+    "mean_answer_token_accuracy": 0.1,
+    "std_answer_token_accuracy": 0.0,
+    "mean_answer_exact_accuracy": 0.0,
+    "std_answer_exact_accuracy": 0.0,
+    "mean_parameter_count": 1124096.0
+  },
+  {
+    "delay_tokens": 16,
+    "variant": "baseline",
+    "runs": 1,
+    "mean_val_ce_loss": 50.2104606628418,
+    "std_val_ce_loss": 0.0,
+    "mean_answer_token_accuracy": 0.1,
+    "std_answer_token_accuracy": 0.0,
+    "mean_answer_exact_accuracy": 0.0,
+    "std_answer_exact_accuracy": 0.0,
+    "mean_parameter_count": 1125504.0
+  }
+]

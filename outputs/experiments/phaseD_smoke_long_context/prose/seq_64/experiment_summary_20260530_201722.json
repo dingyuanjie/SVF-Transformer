@@ -1,0 +1,40 @@
+[
+  {
+    "variant": "baseline",
+    "seed": 42,
+    "steps": 1,
+    "tokenizer": "char",
+    "train_tokens": 19904954,
+    "val_tokens": 1067001,
+    "parameter_count": 1122768,
+    "final_train_loss": 63.55264663696289,
+    "final_train_ce_loss": 63.55264663696289,
+    "final_val_loss": 56.202694702148435,
+    "final_val_ce_loss": 56.202694702148435,
+    "final_val_perplexity": 485165195.4097903,
+    "final_val_conservation_loss": 0.0,
+    "final_val_drift_loss": 0.0,
+    "final_val_structural_energy": 0.0,
+    "checkpoint_path": null,
+    "best_checkpoint_path": null
+  },
+  {
+    "variant": "persistent_core",
+    "seed": 42,
+    "steps": 1,
+    "tokenizer": "char",
+    "train_tokens": 19904954,
+    "val_tokens": 1067001,
+    "parameter_count": 1121664,
+    "final_train_loss": 56.64047622680664,
+    "final_train_ce_loss": 56.64047622680664,
+    "final_val_loss": 51.57880210876465,
+    "final_val_ce_loss": 51.57880210876465,
+    "final_val_perplexity": 485165195.4097903,
+    "final_val_conservation_loss": 9.636108043196146e-05,
+    "final_val_drift_loss": 0.0,
+    "final_val_structural_energy": 0.010179912578314543,
+    "checkpoint_path": null,
+    "best_checkpoint_path": null
+  }
+]

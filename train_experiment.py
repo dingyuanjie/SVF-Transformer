@@ -564,11 +564,13 @@ def train_variant(
 
 
 def resolve_variants(args: argparse.Namespace) -> list[str]:
+    if args.variants:
+        return args.variants
     if args.variant:
         return [args.variant]
     if args.suite:
         return VARIANT_SUITES[args.suite]
-    raise ValueError("Please provide either --variant or --suite.")
+    raise ValueError("Please provide exactly one of --variant, --variants, or --suite.")
 
 
 def write_summary(output_dir: Path, results: list[ExperimentResult]) -> tuple[Path, Path]:
@@ -757,6 +759,14 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Unified training script for baseline vs SVF and ablation studies.")
     parser.add_argument("--data", type=str, default=None, help="Optional UTF-8 text file.")
     parser.add_argument(
+        "--variants",
+        type=str,
+        nargs="+",
+        default=None,
+        choices=["baseline", "memory", "persistent_core", "core_dynamics", "memory_core", "svf"],
+        help="Optional explicit list of variants to run in one experiment.",
+    )
+    parser.add_argument(
         "--variant",
         type=str,
         default=None,
@@ -805,8 +815,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--save-checkpoints", action="store_true")
     args = parser.parse_args()
 
-    if bool(args.variant) == bool(args.suite):
-        parser.error("Provide exactly one of --variant or --suite.")
+    specified_targets = sum(bool(value) for value in (args.variant, args.variants, args.suite))
+    if specified_targets != 1:
+        parser.error("Provide exactly one of --variant, --variants, or --suite.")
 
     return args
 

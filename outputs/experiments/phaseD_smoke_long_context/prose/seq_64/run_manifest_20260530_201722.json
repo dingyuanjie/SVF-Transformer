@@ -1,0 +1,122 @@
+{
+  "timestamp": "2026-05-30T20:17:22",
+  "data_path": "data/svf_prose_20mb.txt",
+  "output_dir": "outputs\\experiments\\phaseD_smoke_long_context\\prose\\seq_64",
+  "variants": [
+    "baseline",
+    "persistent_core"
+  ],
+  "seeds": [
+    42
+  ],
+  "args": {
+    "data": "data/svf_prose_20mb.txt",
+    "variants": [
+      "baseline",
+      "persistent_core"
+    ],
+    "variant": null,
+    "suite": null,
+    "tokenizer": "char",
+    "steps": 1,
+    "batch_size": 2,
+    "seq_len": 64,
+    "d_model": 128,
+    "d_ff": 512,
+    "layers": 4,
+    "heads": 4,
+    "dropout": 0.1,
+    "lr": 0.0003,
+    "weight_decay": 0.01,
+    "grad_clip": 1.0,
+    "core_slots": 4,
+    "memory_size": 256,
+    "attractor_strength": 0.05,
+    "drift_scale": 0.1,
+    "conservation_weight": 0.01,
+    "drift_weight": 0.001,
+    "vocab_size": 4096,
+    "min_frequency": 2,
+    "val_fraction": 0.05,
+    "split_unit": "paragraph",
+    "split_shuffle": true,
+    "split_seed": 1234,
+    "eval_interval": 1,
+    "eval_batches": 20,
+    "log_interval": 20,
+    "seed": 42,
+    "seeds": [
+      42
+    ],
+    "carry_state_across_batches": false,
+    "match_baseline_to": "svf",
+    "device": "cpu",
+    "output_dir": "outputs\\experiments\\phaseD_smoke_long_context\\prose\\seq_64",
+    "save_checkpoints": false
+  },
+  "protocol": {
+    "tokenizer_fit_scope": "train_split_only",
+    "split_unit": "paragraph",
+    "split_shuffle": true,
+    "split_seed": 1234,
+    "validation_batches_independent": true,
+    "eval_write_memory": false,
+    "carry_state_across_batches": false,
+    "baseline_parameter_matching": "svf"
+  },
+  "dataset": {
+    "tokenizer": "char",
+    "tokenizer_vocab_size": 46,
+    "train_text_chars": 19904954,
+    "val_text_chars": 1067001,
+    "train_tokens": 19904954,
+    "val_tokens": 1067001,
+    "val_fraction": 0.05
+  },
+  "artifacts": {
+    "summary_json": "outputs\\experiments\\phaseD_smoke_long_context\\prose\\seq_64\\experiment_summary_20260530_201722.json",
+    "summary_csv": "outputs\\experiments\\phaseD_smoke_long_context\\prose\\seq_64\\experiment_summary_20260530_201722.csv",
+    "aggregate_summary_json": null,
+    "aggregate_summary_csv": null
+  },
+  "results": [
+    {
+      "variant": "baseline",
+      "seed": 42,
+      "steps": 1,
+      "tokenizer": "char",
+      "train_tokens": 19904954,
+      "val_tokens": 1067001,
+      "parameter_count": 1122768,
+      "final_train_loss": 63.55264663696289,
+      "final_train_ce_loss": 63.55264663696289,
+      "final_val_loss": 56.202694702148435,
+      "final_val_ce_loss": 56.202694702148435,
+      "final_val_perplexity": 485165195.4097903,
+      "final_val_conservation_loss": 0.0,
+      "final_val_drift_loss": 0.0,
+      "final_val_structural_energy": 0.0,
+      "checkpoint_path": null,
+      "best_checkpoint_path": null
+    },
+    {
+      "variant": "persistent_core",
+      "seed": 42,
+      "steps": 1,
+      "tokenizer": "char",
+      "train_tokens": 19904954,
+      "val_tokens": 1067001,
+      "parameter_count": 1121664,
+      "final_train_loss": 56.64047622680664,
+      "final_train_ce_loss": 56.64047622680664,
+      "final_val_loss": 51.57880210876465,
+      "final_val_ce_loss": 51.57880210876465,
+      "final_val_perplexity": 485165195.4097903,
+      "final_val_conservation_loss": 9.636108043196146e-05,
+      "final_val_drift_loss": 0.0,
+      "final_val_structural_energy": 0.010179912578314543,
+      "checkpoint_path": null,
+      "best_checkpoint_path": null
+    }
+  ]
+}

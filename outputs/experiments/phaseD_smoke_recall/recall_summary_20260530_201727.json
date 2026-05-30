@@ -1,0 +1,26 @@
+[
+  {
+    "delay_tokens": 16,
+    "variant": "baseline",
+    "seed": 42,
+    "steps": 2,
+    "parameter_count": 1125504,
+    "final_train_loss": 57.784690856933594,
+    "final_val_loss": 50.2104606628418,
+    "final_val_ce_loss": 50.2104606628418,
+    "final_answer_token_accuracy": 0.1,
+    "final_answer_exact_accuracy": 0.0
+  },
+  {
+    "delay_tokens": 16,
+    "variant": "persistent_core",
+    "seed": 42,
+    "steps": 2,
+    "parameter_count": 1124096,
+    "final_train_loss": 52.80264663696289,
+    "final_val_loss": 46.5789909362793,
+    "final_val_ce_loss": 46.5789909362793,
+    "final_answer_token_accuracy": 0.1,
+    "final_answer_exact_accuracy": 0.0
+  }
+]

@@ -1,0 +1,3 @@
+delay_tokens,variant,seed,steps,parameter_count,final_train_loss,final_val_loss,final_val_ce_loss,final_answer_token_accuracy,final_answer_exact_accuracy
+16,baseline,42,2,1125504,57.784690856933594,50.2104606628418,50.2104606628418,0.1,0.0
+16,persistent_core,42,2,1124096,52.80264663696289,46.5789909362793,46.5789909362793,0.1,0.0
