@@ -1,0 +1,2 @@
+variant,runs,mean_val_loss,std_val_loss,mean_val_ce_loss,std_val_ce_loss,mean_val_perplexity,std_val_perplexity,mean_train_loss,mean_train_ce_loss,mean_val_conservation_loss,mean_val_drift_loss,mean_val_structural_energy,mean_parameter_count,best_seed,best_val_ce_loss
+core_dynamics,3,0.03209896025558313,0.002114198201302847,0.03209896025558313,0.002114198201302847,1.0326219956264673,0.0021820992136208626,0.04621431107322375,0.04621431107322375,0.04050099151208997,0.007223667413927615,0.21283892542123795,1245056.0,42,0.029230689350515603
