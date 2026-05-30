@@ -4,6 +4,7 @@ import argparse
 import csv
 import json
 import math
+import random
 import statistics
 from dataclasses import asdict, dataclass
 from datetime import datetime
@@ -26,6 +27,7 @@ SPECIAL_TOKENS = ["<pad>", "<unk>", "<bos>", "<eos>"]
 VARIANT_SUITES = {
     "phase1": ["baseline", "svf"],
     "phase2": ["baseline", "memory", "persistent_core", "memory_core", "svf"],
+    "phaseB": ["baseline", "persistent_core", "memory_core", "svf"],
 }
 
 
@@ -152,6 +154,37 @@ def split_text(text: str, val_fraction: float) -> tuple[str, str]:
     split = max(4, int(len(text) * (1.0 - val_fraction)))
     split = min(split, len(text) - 4)
     return text[:split], text[split:]
+
+
+def split_by_units(
+    text: str,
+    val_fraction: float,
+    *,
+    unit: str,
+    shuffle: bool,
+    seed: int,
+) -> tuple[str, str]:
+    if unit == "char":
+        return split_text(text, val_fraction)
+
+    separator = "\n" if unit == "line" else "\n\n"
+    raw_units = [chunk.strip() for chunk in text.split(separator)]
+    units = [chunk for chunk in raw_units if chunk]
+    if len(units) < 4:
+        raise ValueError(f"Not enough {unit} units for train/val split.")
+
+    ordered_units = list(units)
+    if shuffle:
+        rng = random.Random(seed)
+        rng.shuffle(ordered_units)
+
+    split = max(2, int(len(ordered_units) * (1.0 - val_fraction)))
+    split = min(split, len(ordered_units) - 2)
+    train_units = ordered_units[:split]
+    val_units = ordered_units[split:]
+    train_text = separator.join(train_units).strip() + separator
+    val_text = separator.join(val_units).strip() + separator
+    return train_text, val_text
 
 
 def train_bpe_tokenizer(text: str, vocab_size: int, min_frequency: int) -> BPETokenizerWrapper:
@@ -646,6 +679,9 @@ def build_run_manifest(
         "args": vars(args),
         "protocol": {
             "tokenizer_fit_scope": "train_split_only",
+            "split_unit": args.split_unit,
+            "split_shuffle": args.split_shuffle,
+            "split_seed": args.split_seed,
             "validation_batches_independent": True,
             "eval_write_memory": False,
             "carry_state_across_batches": args.carry_state_across_batches,
@@ -689,6 +725,9 @@ def write_run_manifest(output_dir: Path, manifest: dict[str, Any]) -> tuple[Path
         "## Protocol",
         "",
         f"- tokenizer_fit_scope: `{manifest['protocol']['tokenizer_fit_scope']}`",
+        f"- split_unit: `{manifest['protocol']['split_unit']}`",
+        f"- split_shuffle: `{manifest['protocol']['split_shuffle']}`",
+        f"- split_seed: `{manifest['protocol']['split_seed']}`",
         f"- validation_batches_independent: `{manifest['protocol']['validation_batches_independent']}`",
         f"- eval_write_memory: `{manifest['protocol']['eval_write_memory']}`",
         f"- carry_state_across_batches: `{manifest['protocol']['carry_state_across_batches']}`",
@@ -740,6 +779,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--vocab-size", type=int, default=4096)
     parser.add_argument("--min-frequency", type=int, default=2)
     parser.add_argument("--val-fraction", type=float, default=0.05)
+    parser.add_argument("--split-unit", type=str, default="char", choices=["char", "line", "paragraph"])
+    parser.add_argument("--split-shuffle", action="store_true")
+    parser.add_argument("--split-seed", type=int, default=1234)
     parser.add_argument("--eval-interval", type=int, default=500)
     parser.add_argument("--eval-batches", type=int, default=20)
     parser.add_argument("--log-interval", type=int, default=20)
@@ -767,7 +809,13 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     text = load_text(args.data)
-    train_text, val_text = split_text(text, args.val_fraction)
+    train_text, val_text = split_by_units(
+        text,
+        args.val_fraction,
+        unit=args.split_unit,
+        shuffle=args.split_shuffle,
+        seed=args.split_seed,
+    )
     tokenizer = build_tokenizer(train_text, args.tokenizer, args.vocab_size, args.min_frequency)
     train_ids = tokenizer.encode(train_text)
     val_ids = tokenizer.encode(val_text)
@@ -776,6 +824,11 @@ def main() -> None:
     variants = resolve_variants(args)
 
     print(f"tokenizer={args.tokenizer} vocab_size={tokenizer.vocab_size}")
+    print(
+        f"split_unit={args.split_unit} "
+        f"split_shuffle={args.split_shuffle} "
+        f"split_seed={args.split_seed}"
+    )
     print(f"train_text_chars={len(train_text)} val_text_chars={len(val_text)}")
     print(f"train_tokens={len(train_dataset.data)} val_tokens={len(val_dataset.data)}")
     print(f"variants={', '.join(variants)}")
