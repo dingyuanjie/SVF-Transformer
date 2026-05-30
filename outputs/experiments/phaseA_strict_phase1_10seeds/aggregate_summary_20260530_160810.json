@@ -1,0 +1,38 @@
+[
+  {
+    "variant": "svf",
+    "runs": 10,
+    "mean_val_loss": 0.042746749866055325,
+    "std_val_loss": 0.004441291526843425,
+    "mean_val_ce_loss": 0.04246743217925541,
+    "std_val_ce_loss": 0.0044394777611421925,
+    "mean_val_perplexity": 1.0433923508636342,
+    "std_val_perplexity": 0.004627852407126311,
+    "mean_train_loss": 0.07606570646166802,
+    "mean_train_ce_loss": 0.0757960818707943,
+    "mean_val_conservation_loss": 0.027212105290964246,
+    "mean_val_drift_loss": 0.0071965823322534565,
+    "mean_val_structural_energy": 0.19171052932739258,
+    "mean_parameter_count": 1292928.0,
+    "best_seed": 47,
+    "best_val_ce_loss": 0.03458095047390088
+  },
+  {
+    "variant": "baseline",
+    "runs": 10,
+    "mean_val_loss": 0.13895541422069074,
+    "std_val_loss": 0.002757224759248082,
+    "mean_val_ce_loss": 0.13895541422069074,
+    "std_val_ce_loss": 0.002757224759248082,
+    "mean_val_perplexity": 1.1490772324588132,
+    "std_val_perplexity": 0.0031662065970465263,
+    "mean_train_loss": 0.1729898676276207,
+    "mean_train_ce_loss": 0.1729898676276207,
+    "mean_val_conservation_loss": 0.0,
+    "mean_val_drift_loss": 0.0,
+    "mean_val_structural_energy": 0.0,
+    "mean_parameter_count": 1315440.0,
+    "best_seed": 44,
+    "best_val_ce_loss": 0.13362196870148182
+  }
+]
