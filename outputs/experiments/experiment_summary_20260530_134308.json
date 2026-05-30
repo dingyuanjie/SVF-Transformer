@@ -1,0 +1,40 @@
+[
+  {
+    "variant": "baseline",
+    "seed": 42,
+    "steps": 2,
+    "tokenizer": "char",
+    "train_tokens": 246,
+    "val_tokens": 26,
+    "parameter_count": 23808,
+    "final_train_loss": 19.38814353942871,
+    "final_train_ce_loss": 19.38814353942871,
+    "final_val_loss": 20.55817222595215,
+    "final_val_ce_loss": 20.55817222595215,
+    "final_val_perplexity": 485165195.4097903,
+    "final_val_conservation_loss": 0.0,
+    "final_val_drift_loss": 0.0,
+    "final_val_structural_energy": 0.0,
+    "checkpoint_path": null,
+    "best_checkpoint_path": null
+  },
+  {
+    "variant": "svf",
+    "seed": 42,
+    "steps": 2,
+    "tokenizer": "char",
+    "train_tokens": 246,
+    "val_tokens": 26,
+    "parameter_count": 38848,
+    "final_train_loss": 19.642662048339844,
+    "final_train_ce_loss": 19.642662048339844,
+    "final_val_loss": 20.442716598510742,
+    "final_val_ce_loss": 20.442716598510742,
+    "final_val_perplexity": 485165195.4097903,
+    "final_val_conservation_loss": 1.0252725587633904e-05,
+    "final_val_drift_loss": 0.00038035219768062234,
+    "final_val_structural_energy": 0.0036951531656086445,
+    "checkpoint_path": null,
+    "best_checkpoint_path": null
+  }
+]

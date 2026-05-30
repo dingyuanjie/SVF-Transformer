@@ -191,6 +191,47 @@ Evaluate the best validation checkpoint:
 python eval_bpe.py --checkpoint svf_bpe_best.pt --device cuda
 ```
 
+## Unified Experiments
+
+Use the unified experiment runner when you want a fair comparison under one tokenizer, one data split, and one optimizer setup.
+
+Phase 1 compares the plain Transformer baseline against full SVF:
+
+```bash
+python train_experiment.py --suite phase1 --data data/svf_mixed_bpe_clean_20mb.txt --tokenizer bpe --steps 15000 --batch-size 16 --seq-len 128 --d-model 128 --layers 4 --heads 4 --device cuda --eval-interval 500 --save-checkpoints
+```
+
+Phase 2 runs the ablation suite:
+
+```bash
+python train_experiment.py --suite phase2 --data data/svf_mixed_bpe_clean_20mb.txt --tokenizer bpe --steps 15000 --batch-size 16 --seq-len 128 --d-model 128 --layers 4 --heads 4 --device cuda --eval-interval 500 --save-checkpoints
+```
+
+For a more reliable paper-style result, repeat each suite with multiple seeds and compare mean and standard deviation:
+
+```bash
+python train_experiment.py --suite phase1 --seeds 42 43 44 --data data/svf_mixed_bpe_clean_20mb.txt --tokenizer bpe --steps 15000 --batch-size 16 --seq-len 128 --d-model 128 --layers 4 --heads 4 --device cuda --eval-interval 500 --save-checkpoints
+python train_experiment.py --suite phase2 --seeds 42 43 44 --data data/svf_mixed_bpe_clean_20mb.txt --tokenizer bpe --steps 15000 --batch-size 16 --seq-len 128 --d-model 128 --layers 4 --heads 4 --device cuda --eval-interval 500 --save-checkpoints
+```
+
+Run a single variant directly:
+
+```bash
+python train_experiment.py --variant baseline --data data/svf_mixed_bpe_clean_20mb.txt --tokenizer bpe --steps 15000 --device cuda
+python train_experiment.py --variant svf --data data/svf_mixed_bpe_clean_20mb.txt --tokenizer bpe --steps 15000 --device cuda
+```
+
+Available variants:
+
+- `baseline`: plain Transformer backbone only.
+- `memory`: Transformer + ring-buffer memory.
+- `persistent_core`: Transformer + persistent core.
+- `memory_core`: Transformer + memory + persistent core, without structural regularization.
+- `svf`: full SVF with memory, persistent core, drift, attractor pull, and structural losses.
+
+Each run writes a timestamped JSON and CSV summary into `outputs/experiments/`.
+When `--seeds` is used, the script also writes aggregate mean/std summaries and saves checkpoints with a `seed` suffix.
+
 ## Test
 
 ```bash

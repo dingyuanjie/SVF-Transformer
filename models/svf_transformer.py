@@ -23,12 +23,17 @@ class SVFTransformerConfig:
     drift_scale: float = 0.1
     conservation_weight: float = 0.01
     drift_weight: float = 0.001
+    use_memory: bool = True
+    use_persistent_core: bool = True
+    use_structural_dynamics: bool = True
+    use_structural_loss: bool = True
 
 
 @dataclass
 class SVFTransformerOutput:
     logits: Tensor
     loss: Optional[Tensor]
+    ce_loss: Optional[Tensor]
     core_state: Tensor
     structural_energy: Tensor
     conservation_loss: Tensor
@@ -104,7 +109,12 @@ class PersistentCore(nn.Module):
     def fresh_state(self, batch_size: int, device: torch.device) -> Tensor:
         return self.initial_core.unsqueeze(0).expand(batch_size, -1, -1).to(device)
 
-    def forward(self, hidden: Tensor, core_state: Optional[Tensor]) -> tuple[Tensor, Tensor, Tensor, Tensor]:
+    def forward(
+        self,
+        hidden: Tensor,
+        core_state: Optional[Tensor],
+        use_structural_dynamics: bool = True,
+    ) -> tuple[Tensor, Tensor, Tensor, Tensor, Tensor]:
         batch_size = hidden.size(0)
         if core_state is None:
             core_state = self.fresh_state(batch_size, hidden.device)
@@ -117,9 +127,13 @@ class PersistentCore(nn.Module):
         updated = self.core_update(repeated_summary, flat_core)
         updated = updated.view(batch_size, self.config.core_slots, self.config.d_model)
 
-        drift = torch.tanh(self.drift(updated)) * self.config.drift_scale
-        attractor = self.attractor.unsqueeze(0)
-        next_core = updated + drift - self.config.attractor_strength * (updated - attractor)
+        if use_structural_dynamics:
+            drift = torch.tanh(self.drift(updated)) * self.config.drift_scale
+            attractor = self.attractor.unsqueeze(0)
+            next_core = updated + drift - self.config.attractor_strength * (updated - attractor)
+        else:
+            drift = torch.zeros_like(updated)
+            next_core = updated
 
         old_energy = core_state.pow(2).mean(dim=(1, 2))
         new_energy = next_core.pow(2).mean(dim=(1, 2))
@@ -130,6 +144,93 @@ class PersistentCore(nn.Module):
         gate = torch.sigmoid(self.hidden_gate(torch.cat([hidden, core_context.expand_as(hidden)], dim=-1)))
         hidden = hidden + gate * core_context
         return hidden, next_core, new_energy.mean(), conservation_loss, drift_loss
+
+
+class IdentityCore(nn.Module):
+    """Fallback core used by the baseline and memory-only ablations."""
+
+    def __init__(self, config: SVFTransformerConfig) -> None:
+        super().__init__()
+        self.config = config
+
+    def forward(
+        self,
+        hidden: Tensor,
+        core_state: Optional[Tensor],
+        use_structural_dynamics: bool = True,
+    ) -> tuple[Tensor, Tensor, Tensor, Tensor, Tensor]:
+        batch_size = hidden.size(0)
+        device = hidden.device
+        next_core = torch.zeros(
+            batch_size,
+            self.config.core_slots,
+            self.config.d_model,
+            device=device,
+            dtype=hidden.dtype,
+        )
+        zero = hidden.new_zeros(())
+        return hidden, next_core, zero, zero, zero
+
+
+def build_config_for_variant(
+    base_config: SVFTransformerConfig,
+    variant: str,
+) -> SVFTransformerConfig:
+    variant_key = variant.strip().lower().replace("-", "_")
+    if variant_key == "baseline":
+        return SVFTransformerConfig(
+            **{
+                **base_config.__dict__,
+                "use_memory": False,
+                "use_persistent_core": False,
+                "use_structural_dynamics": False,
+                "use_structural_loss": False,
+            }
+        )
+    if variant_key == "memory":
+        return SVFTransformerConfig(
+            **{
+                **base_config.__dict__,
+                "use_memory": True,
+                "use_persistent_core": False,
+                "use_structural_dynamics": False,
+                "use_structural_loss": False,
+            }
+        )
+    if variant_key in {"persistent_core", "core"}:
+        return SVFTransformerConfig(
+            **{
+                **base_config.__dict__,
+                "use_memory": False,
+                "use_persistent_core": True,
+                "use_structural_dynamics": False,
+                "use_structural_loss": False,
+            }
+        )
+    if variant_key in {"memory_core", "core_memory"}:
+        return SVFTransformerConfig(
+            **{
+                **base_config.__dict__,
+                "use_memory": True,
+                "use_persistent_core": True,
+                "use_structural_dynamics": False,
+                "use_structural_loss": False,
+            }
+        )
+    if variant_key in {"svf", "full_svf"}:
+        return SVFTransformerConfig(
+            **{
+                **base_config.__dict__,
+                "use_memory": True,
+                "use_persistent_core": True,
+                "use_structural_dynamics": True,
+                "use_structural_loss": True,
+            }
+        )
+    raise ValueError(
+        "Unknown variant. Expected one of: "
+        "baseline, memory, persistent_core, memory_core, svf."
+    )
 
 
 class SVFTransformer(nn.Module):
@@ -152,10 +253,13 @@ class SVFTransformer(nn.Module):
         )
         self.backbone = nn.TransformerEncoder(encoder_layer, num_layers=config.n_layers)
         self.memory = RingBufferMemory(config.memory_size, config.d_model)
-        self.core = PersistentCore(config)
+        self.core = PersistentCore(config) if config.use_persistent_core else IdentityCore(config)
         self.norm = nn.LayerNorm(config.d_model)
         self.lm_head = nn.Linear(config.d_model, config.vocab_size, bias=False)
         self.lm_head.weight = self.token_embedding.weight
+
+    def reset_state(self) -> None:
+        self.memory.reset()
 
     def forward(
         self,
@@ -184,18 +288,25 @@ class SVFTransformer(nn.Module):
         if use_memory:
             hidden = hidden + self.memory.read(hidden)
 
-        hidden, next_core, energy, conservation_loss, drift_loss = self.core(hidden, core_state)
+        hidden, next_core, energy, conservation_loss, drift_loss = self.core(
+            hidden,
+            core_state,
+            use_structural_dynamics=self.config.use_structural_dynamics,
+        )
         hidden = self.norm(hidden)
         logits = self.lm_head(hidden)
 
         loss = None
+        ce_loss = None
         if targets is not None:
             ce_loss = F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
-            loss = (
-                ce_loss
-                + self.config.conservation_weight * conservation_loss
-                + self.config.drift_weight * drift_loss
-            )
+            loss = ce_loss
+            if self.config.use_structural_loss:
+                loss = (
+                    loss
+                    + self.config.conservation_weight * conservation_loss
+                    + self.config.drift_weight * drift_loss
+                )
 
         if write_memory:
             self.memory.write(hidden)
@@ -203,6 +314,7 @@ class SVFTransformer(nn.Module):
         return SVFTransformerOutput(
             logits=logits,
             loss=loss,
+            ce_loss=ce_loss,
             core_state=next_core,
             structural_energy=energy,
             conservation_loss=conservation_loss,

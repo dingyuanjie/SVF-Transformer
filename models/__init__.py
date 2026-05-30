@@ -3,6 +3,7 @@ from .svf_transformer import (
     SVFTransformer,
     SVFTransformerConfig,
     SVFTransformerOutput,
+    build_config_for_variant,
 )
 
 __all__ = [
@@ -10,4 +11,5 @@ __all__ = [
     "SVFTransformer",
     "SVFTransformerConfig",
     "SVFTransformerOutput",
+    "build_config_for_variant",
 ]
