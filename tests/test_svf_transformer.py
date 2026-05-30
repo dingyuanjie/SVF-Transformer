@@ -67,6 +67,16 @@ def test_variant_builder_full_svf_enables_all_modules():
     assert config.use_structural_loss is True
 
 
+def test_variant_builder_core_dynamics_enables_dynamics_without_memory():
+    base = SVFTransformerConfig(vocab_size=32, d_model=32, n_heads=4, n_layers=2, d_ff=64)
+    config = build_config_for_variant(base, "core_dynamics")
+
+    assert config.use_memory is False
+    assert config.use_persistent_core is True
+    assert config.use_structural_dynamics is True
+    assert config.use_structural_loss is False
+
+
 def test_baseline_loss_matches_cross_entropy_only():
     base = SVFTransformerConfig(
         vocab_size=32,

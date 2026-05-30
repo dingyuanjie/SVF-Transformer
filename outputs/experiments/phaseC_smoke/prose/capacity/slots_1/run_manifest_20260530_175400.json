@@ -1,0 +1,98 @@
+{
+  "timestamp": "2026-05-30T17:54:00",
+  "data_path": "data/svf_prose_20mb.txt",
+  "output_dir": "outputs\\experiments\\phaseC_smoke\\prose\\capacity\\slots_1",
+  "variants": [
+    "persistent_core"
+  ],
+  "seeds": [
+    42
+  ],
+  "args": {
+    "data": "data/svf_prose_20mb.txt",
+    "variant": "persistent_core",
+    "suite": null,
+    "tokenizer": "char",
+    "steps": 1,
+    "batch_size": 2,
+    "seq_len": 16,
+    "d_model": 32,
+    "d_ff": 512,
+    "layers": 2,
+    "heads": 4,
+    "dropout": 0.1,
+    "lr": 0.0003,
+    "weight_decay": 0.01,
+    "grad_clip": 1.0,
+    "core_slots": 1,
+    "memory_size": 256,
+    "attractor_strength": 0.05,
+    "drift_scale": 0.1,
+    "conservation_weight": 0.01,
+    "drift_weight": 0.001,
+    "vocab_size": 4096,
+    "min_frequency": 2,
+    "val_fraction": 0.05,
+    "split_unit": "paragraph",
+    "split_shuffle": true,
+    "split_seed": 1234,
+    "eval_interval": 500,
+    "eval_batches": 20,
+    "log_interval": 20,
+    "seed": 42,
+    "seeds": [
+      42
+    ],
+    "carry_state_across_batches": false,
+    "match_baseline_to": null,
+    "device": "cpu",
+    "output_dir": "outputs\\experiments\\phaseC_smoke\\prose\\capacity\\slots_1",
+    "save_checkpoints": false
+  },
+  "protocol": {
+    "tokenizer_fit_scope": "train_split_only",
+    "split_unit": "paragraph",
+    "split_shuffle": true,
+    "split_seed": 1234,
+    "validation_batches_independent": true,
+    "eval_write_memory": false,
+    "carry_state_across_batches": false,
+    "baseline_parameter_matching": null
+  },
+  "dataset": {
+    "tokenizer": "char",
+    "tokenizer_vocab_size": 46,
+    "train_text_chars": 19904954,
+    "val_text_chars": 1067001,
+    "train_tokens": 19904954,
+    "val_tokens": 1067001,
+    "val_fraction": 0.05
+  },
+  "artifacts": {
+    "summary_json": "outputs\\experiments\\phaseC_smoke\\prose\\capacity\\slots_1\\experiment_summary_20260530_175400.json",
+    "summary_csv": "outputs\\experiments\\phaseC_smoke\\prose\\capacity\\slots_1\\experiment_summary_20260530_175400.csv",
+    "aggregate_summary_json": null,
+    "aggregate_summary_csv": null
+  },
+  "results": [
+    {
+      "variant": "persistent_core",
+      "seed": 42,
+      "steps": 1,
+      "tokenizer": "char",
+      "train_tokens": 19904954,
+      "val_tokens": 1067001,
+      "parameter_count": 97376,
+      "final_train_loss": 18.72776222229004,
+      "final_train_ce_loss": 18.72776222229004,
+      "final_val_loss": 19.66014928817749,
+      "final_val_ce_loss": 19.66014928817749,
+      "final_val_perplexity": 345377744.6955436,
+      "final_val_conservation_loss": 8.177526178769768e-05,
+      "final_val_drift_loss": 0.0,
+      "final_val_structural_energy": 0.009410471143200993,
+      "checkpoint_path": null,
+      "best_checkpoint_path": null
+    }
+  ]
+}

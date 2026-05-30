@@ -207,6 +207,16 @@ def build_config_for_variant(
                 "use_structural_loss": False,
             }
         )
+    if variant_key in {"core_dynamics", "persistent_core_dynamics"}:
+        return SVFTransformerConfig(
+            **{
+                **base_config.__dict__,
+                "use_memory": False,
+                "use_persistent_core": True,
+                "use_structural_dynamics": True,
+                "use_structural_loss": False,
+            }
+        )
     if variant_key in {"memory_core", "core_memory"}:
         return SVFTransformerConfig(
             **{
@@ -229,7 +239,7 @@ def build_config_for_variant(
         )
     raise ValueError(
         "Unknown variant. Expected one of: "
-        "baseline, memory, persistent_core, memory_core, svf."
+        "baseline, memory, persistent_core, core_dynamics, memory_core, svf."
     )
 
 

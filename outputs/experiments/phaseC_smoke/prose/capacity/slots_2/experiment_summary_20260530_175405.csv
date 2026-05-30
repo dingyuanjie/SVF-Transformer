@@ -1,0 +1,2 @@
+variant,seed,steps,tokenizer,train_tokens,val_tokens,parameter_count,final_train_loss,final_train_ce_loss,final_val_loss,final_val_ce_loss,final_val_perplexity,final_val_conservation_loss,final_val_drift_loss,final_val_structural_energy,checkpoint_path,best_checkpoint_path
+persistent_core,42,1,char,19904954,1067001,97440,18.27073097229004,18.27073097229004,19.608365726470947,19.608365726470947,327948035.83689594,4.335561388870701e-05,0.0,0.006905227736569941,,

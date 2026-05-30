@@ -756,7 +756,12 @@ def write_run_manifest(output_dir: Path, manifest: dict[str, Any]) -> tuple[Path
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Unified training script for baseline vs SVF and ablation studies.")
     parser.add_argument("--data", type=str, default=None, help="Optional UTF-8 text file.")
-    parser.add_argument("--variant", type=str, default=None, choices=["baseline", "memory", "persistent_core", "memory_core", "svf"])
+    parser.add_argument(
+        "--variant",
+        type=str,
+        default=None,
+        choices=["baseline", "memory", "persistent_core", "core_dynamics", "memory_core", "svf"],
+    )
     parser.add_argument("--suite", type=str, default=None, choices=sorted(VARIANT_SUITES))
     parser.add_argument("--tokenizer", type=str, default="bpe", choices=["char", "bpe"])
     parser.add_argument("--steps", type=int, default=3000)

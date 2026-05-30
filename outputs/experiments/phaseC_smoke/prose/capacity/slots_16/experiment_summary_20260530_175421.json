@@ -1,0 +1,21 @@
+[
+  {
+    "variant": "persistent_core",
+    "seed": 42,
+    "steps": 1,
+    "tokenizer": "char",
+    "train_tokens": 19904954,
+    "val_tokens": 1067001,
+    "parameter_count": 98336,
+    "final_train_loss": 18.40736198425293,
+    "final_train_ce_loss": 18.40736198425293,
+    "final_val_loss": 19.5727294921875,
+    "final_val_ce_loss": 19.5727294921875,
+    "final_val_perplexity": 316466988.4419457,
+    "final_val_conservation_loss": 0.00011102325006504544,
+    "final_val_drift_loss": 0.0,
+    "final_val_structural_energy": 0.010882808174937964,
+    "checkpoint_path": null,
+    "best_checkpoint_path": null
+  }
+]

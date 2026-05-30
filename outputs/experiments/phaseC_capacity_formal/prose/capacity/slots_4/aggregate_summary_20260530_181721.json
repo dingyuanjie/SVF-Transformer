@@ -1,0 +1,20 @@
+[
+  {
+    "variant": "persistent_core",
+    "runs": 3,
+    "mean_val_loss": 0.032280067137132086,
+    "std_val_loss": 0.0008652213510376459,
+    "mean_val_ce_loss": 0.032280067137132086,
+    "std_val_ce_loss": 0.0008652213510376459,
+    "mean_val_perplexity": 1.0328071065591342,
+    "std_val_perplexity": 0.0008934355817854409,
+    "mean_train_loss": 0.046335397909084954,
+    "mean_train_ce_loss": 0.046335397909084954,
+    "mean_val_conservation_loss": 0.06676216969887415,
+    "mean_val_drift_loss": 0.0,
+    "mean_val_structural_energy": 0.26958191643158597,
+    "mean_parameter_count": 1245056.0,
+    "best_seed": 44,
+    "best_val_ce_loss": 0.031110482383519412
+  }
+]
