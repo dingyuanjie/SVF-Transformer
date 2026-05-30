@@ -1,0 +1,20 @@
+[
+  {
+    "variant": "core_dynamics",
+    "runs": 3,
+    "mean_val_loss": 0.03146880612087746,
+    "std_val_loss": 0.0015458261134216407,
+    "mean_val_ce_loss": 0.03146880612087746,
+    "std_val_ce_loss": 0.0015458261134216407,
+    "mean_val_perplexity": 1.0319704167439288,
+    "std_val_perplexity": 0.001594831444473958,
+    "mean_train_loss": 0.04917804027597109,
+    "mean_train_ce_loss": 0.04917804027597109,
+    "mean_val_conservation_loss": 0.061461201434334124,
+    "mean_val_drift_loss": 0.0021224970056209712,
+    "mean_val_structural_energy": 0.2593221331636111,
+    "mean_parameter_count": 1245056.0,
+    "best_seed": 42,
+    "best_val_ce_loss": 0.02942158919759095
+  }
+]
