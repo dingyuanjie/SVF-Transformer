@@ -1,0 +1,112 @@
+{
+  "timestamp": "2026-05-30T15:15:55",
+  "data_path": null,
+  "output_dir": "outputs/experiments/manifest_smoke",
+  "variants": [
+    "baseline",
+    "svf"
+  ],
+  "seeds": [
+    42
+  ],
+  "args": {
+    "data": null,
+    "variant": null,
+    "suite": "phase1",
+    "tokenizer": "char",
+    "steps": 1,
+    "batch_size": 2,
+    "seq_len": 16,
+    "d_model": 32,
+    "d_ff": 64,
+    "layers": 2,
+    "heads": 4,
+    "dropout": 0.1,
+    "lr": 0.0003,
+    "weight_decay": 0.01,
+    "grad_clip": 1.0,
+    "core_slots": 4,
+    "memory_size": 256,
+    "attractor_strength": 0.05,
+    "drift_scale": 0.1,
+    "conservation_weight": 0.01,
+    "drift_weight": 0.001,
+    "vocab_size": 4096,
+    "min_frequency": 2,
+    "val_fraction": 0.05,
+    "eval_interval": 1,
+    "eval_batches": 1,
+    "log_interval": 20,
+    "seed": 42,
+    "seeds": [
+      42
+    ],
+    "carry_state_across_batches": false,
+    "match_baseline_to": null,
+    "device": "cpu",
+    "output_dir": "outputs/experiments/manifest_smoke",
+    "save_checkpoints": false
+  },
+  "protocol": {
+    "tokenizer_fit_scope": "train_split_only",
+    "validation_batches_independent": true,
+    "eval_write_memory": false,
+    "carry_state_across_batches": false,
+    "baseline_parameter_matching": null
+  },
+  "dataset": {
+    "tokenizer": "char",
+    "tokenizer_vocab_size": 32,
+    "train_text_chars": 246,
+    "val_text_chars": 13,
+    "train_tokens": 246,
+    "val_tokens": 26,
+    "val_fraction": 0.05
+  },
+  "artifacts": {
+    "summary_json": "outputs\\experiments\\manifest_smoke\\experiment_summary_20260530_151555.json",
+    "summary_csv": "outputs\\experiments\\manifest_smoke\\experiment_summary_20260530_151555.csv",
+    "aggregate_summary_json": null,
+    "aggregate_summary_csv": null
+  },
+  "results": [
+    {
+      "variant": "baseline",
+      "seed": 42,
+      "steps": 1,
+      "tokenizer": "char",
+      "train_tokens": 246,
+      "val_tokens": 26,
+      "parameter_count": 23840,
+      "final_train_loss": 20.18760871887207,
+      "final_train_ce_loss": 20.18760871887207,
+      "final_val_loss": 20.74618911743164,
+      "final_val_ce_loss": 20.74618911743164,
+      "final_val_perplexity": 485165195.4097903,
+      "final_val_conservation_loss": 0.0,
+      "final_val_drift_loss": 0.0,
+      "final_val_structural_energy": 0.0,
+      "checkpoint_path": null,
+      "best_checkpoint_path": null
+    },
+    {
+      "variant": "svf",
+      "seed": 42,
+      "steps": 1,
+      "tokenizer": "char",
+      "train_tokens": 246,
+      "val_tokens": 26,
+      "parameter_count": 38880,
+      "final_train_loss": 19.926054000854492,
+      "final_train_ce_loss": 19.926054000854492,
+      "final_val_loss": 20.553373336791992,
+      "final_val_ce_loss": 20.553373336791992,
+      "final_val_perplexity": 485165195.4097903,
+      "final_val_conservation_loss": 8.158161654137075e-05,
+      "final_val_drift_loss": 0.00044201919808983803,
+      "final_val_structural_energy": 0.009353864938020706,
+      "checkpoint_path": null,
+      "best_checkpoint_path": null
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+variant,seed,steps,tokenizer,train_tokens,val_tokens,parameter_count,final_train_loss,final_train_ce_loss,final_val_loss,final_val_ce_loss,final_val_perplexity,final_val_conservation_loss,final_val_drift_loss,final_val_structural_energy,checkpoint_path,best_checkpoint_path
+baseline,42,1,char,246,26,23840,20.18760871887207,20.18760871887207,20.74618911743164,20.74618911743164,485165195.4097903,0.0,0.0,0.0,,
+svf,42,1,char,246,26,38880,19.926054000854492,19.926054000854492,20.553373336791992,20.553373336791992,485165195.4097903,8.158161654137075e-05,0.00044201919808983803,0.009353864938020706,,

@@ -806,6 +806,22 @@ def main() -> None:
     if len(seeds) > 1:
         aggregate_results_data = aggregate_results(results)
         aggregate_json_path, aggregate_csv_path = write_aggregate_summary(output_dir, aggregate_results_data)
+    manifest = build_run_manifest(
+        args=args,
+        variants=variants,
+        seeds=seeds,
+        train_text=train_text,
+        val_text=val_text,
+        train_dataset=train_dataset,
+        val_dataset=val_dataset,
+        tokenizer_vocab_size=tokenizer.vocab_size,
+        results=results,
+        summary_json=json_path,
+        summary_csv=csv_path,
+        aggregate_json=aggregate_json_path,
+        aggregate_csv=aggregate_csv_path,
+    )
+    manifest_json_path, manifest_md_path = write_run_manifest(output_dir, manifest)
     print("\n=== Summary ===")
     for result in sorted(results, key=lambda item: item.final_val_ce_loss):
         print(
@@ -830,6 +846,8 @@ def main() -> None:
     if aggregate_json_path is not None and aggregate_csv_path is not None:
         print(f"aggregate_summary_json={aggregate_json_path}")
         print(f"aggregate_summary_csv={aggregate_csv_path}")
+    print(f"run_manifest_json={manifest_json_path}")
+    print(f"run_manifest_md={manifest_md_path}")
 
 
 if __name__ == "__main__":
