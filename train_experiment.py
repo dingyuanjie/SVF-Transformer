@@ -621,6 +621,99 @@ def write_aggregate_summary(output_dir: Path, results: list[AggregateResult]) ->
     return json_path, csv_path
 
 
+def build_run_manifest(
+    *,
+    args: argparse.Namespace,
+    variants: list[str],
+    seeds: list[int],
+    train_text: str,
+    val_text: str,
+    train_dataset: SequenceDataset,
+    val_dataset: SequenceDataset,
+    tokenizer_vocab_size: int,
+    results: list[ExperimentResult],
+    summary_json: Path,
+    summary_csv: Path,
+    aggregate_json: Optional[Path],
+    aggregate_csv: Optional[Path],
+) -> dict[str, Any]:
+    return {
+        "timestamp": datetime.now().isoformat(timespec="seconds"),
+        "data_path": args.data,
+        "output_dir": args.output_dir,
+        "variants": variants,
+        "seeds": seeds,
+        "args": vars(args),
+        "protocol": {
+            "tokenizer_fit_scope": "train_split_only",
+            "validation_batches_independent": True,
+            "eval_write_memory": False,
+            "carry_state_across_batches": args.carry_state_across_batches,
+            "baseline_parameter_matching": args.match_baseline_to,
+        },
+        "dataset": {
+            "tokenizer": args.tokenizer,
+            "tokenizer_vocab_size": tokenizer_vocab_size,
+            "train_text_chars": len(train_text),
+            "val_text_chars": len(val_text),
+            "train_tokens": len(train_dataset.data),
+            "val_tokens": len(val_dataset.data),
+            "val_fraction": args.val_fraction,
+        },
+        "artifacts": {
+            "summary_json": str(summary_json),
+            "summary_csv": str(summary_csv),
+            "aggregate_summary_json": str(aggregate_json) if aggregate_json is not None else None,
+            "aggregate_summary_csv": str(aggregate_csv) if aggregate_csv is not None else None,
+        },
+        "results": [asdict(result) for result in results],
+    }
+
+
+def write_run_manifest(output_dir: Path, manifest: dict[str, Any]) -> tuple[Path, Path]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    json_path = output_dir / f"run_manifest_{timestamp}.json"
+    md_path = output_dir / f"run_manifest_{timestamp}.md"
+    json_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
+    lines = [
+        "# Experiment Manifest",
+        "",
+        f"- timestamp: `{manifest['timestamp']}`",
+        f"- data_path: `{manifest['data_path']}`",
+        f"- output_dir: `{manifest['output_dir']}`",
+        f"- variants: `{', '.join(manifest['variants'])}`",
+        f"- seeds: `{', '.join(str(seed) for seed in manifest['seeds'])}`",
+        "",
+        "## Protocol",
+        "",
+        f"- tokenizer_fit_scope: `{manifest['protocol']['tokenizer_fit_scope']}`",
+        f"- validation_batches_independent: `{manifest['protocol']['validation_batches_independent']}`",
+        f"- eval_write_memory: `{manifest['protocol']['eval_write_memory']}`",
+        f"- carry_state_across_batches: `{manifest['protocol']['carry_state_across_batches']}`",
+        f"- baseline_parameter_matching: `{manifest['protocol']['baseline_parameter_matching']}`",
+        "",
+        "## Dataset",
+        "",
+        f"- tokenizer: `{manifest['dataset']['tokenizer']}`",
+        f"- tokenizer_vocab_size: `{manifest['dataset']['tokenizer_vocab_size']}`",
+        f"- train_text_chars: `{manifest['dataset']['train_text_chars']}`",
+        f"- val_text_chars: `{manifest['dataset']['val_text_chars']}`",
+        f"- train_tokens: `{manifest['dataset']['train_tokens']}`",
+        f"- val_tokens: `{manifest['dataset']['val_tokens']}`",
+        "",
+        "## Artifacts",
+        "",
+        f"- summary_json: `{manifest['artifacts']['summary_json']}`",
+        f"- summary_csv: `{manifest['artifacts']['summary_csv']}`",
+        f"- aggregate_summary_json: `{manifest['artifacts']['aggregate_summary_json']}`",
+        f"- aggregate_summary_csv: `{manifest['artifacts']['aggregate_summary_csv']}`",
+    ]
+    md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return json_path, md_path
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Unified training script for baseline vs SVF and ablation studies.")
     parser.add_argument("--data", type=str, default=None, help="Optional UTF-8 text file.")
