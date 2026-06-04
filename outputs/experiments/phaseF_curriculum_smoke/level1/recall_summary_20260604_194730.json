@@ -1,0 +1,40 @@
+[
+  {
+    "task_type": "multi_entity",
+    "delay_tokens": 512,
+    "variant": "baseline",
+    "seed": 42,
+    "steps": 1,
+    "parameter_count": 1198080,
+    "final_train_loss": 73.10972595214844,
+    "final_val_loss": 67.79084014892578,
+    "final_val_ce_loss": 67.79084014892578,
+    "final_answer_token_accuracy": 0.0,
+    "final_answer_exact_accuracy": 0.0,
+    "final_val_structural_energy": 0.0,
+    "final_val_drift_loss": 0.0,
+    "final_core_norm_mean": 0.0,
+    "final_core_slot_norm_std": 0.0,
+    "final_attractor_distance": 0.0,
+    "core_trace_path": "outputs\\experiments\\phaseF_curriculum_smoke\\level1\\core_traces\\delay512_baseline_seed42.json"
+  },
+  {
+    "task_type": "multi_entity",
+    "delay_tokens": 512,
+    "variant": "persistent_core",
+    "seed": 42,
+    "steps": 1,
+    "parameter_count": 1188608,
+    "final_train_loss": 63.2166748046875,
+    "final_val_loss": 59.32923889160156,
+    "final_val_ce_loss": 59.32923889160156,
+    "final_answer_token_accuracy": 0.0,
+    "final_answer_exact_accuracy": 0.0,
+    "final_val_structural_energy": 0.006202967371791601,
+    "final_val_drift_loss": 0.0,
+    "final_core_norm_mean": 0.8907409906387329,
+    "final_core_slot_norm_std": 0.005135020241141319,
+    "final_attractor_distance": 0.07875891774892807,
+    "core_trace_path": "outputs\\experiments\\phaseF_curriculum_smoke\\level1\\core_traces\\delay512_persistent_core_seed42.json"
+  }
+]
