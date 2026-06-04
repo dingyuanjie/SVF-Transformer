@@ -9,6 +9,7 @@ import statistics
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Optional
 
 import torch
 from torch.utils.data import DataLoader, Dataset
@@ -18,7 +19,14 @@ from train_experiment import auto_match_variant_config, build_base_config, count
 
 
 SPECIAL_TOKENS = ["<pad>", "<bos>", "<eos>"]
-CONTROL_TOKENS = ["remember", "code", "context", "question", "answer"]
+CONTROL_TOKENS = [
+    "remember",
+    "context",
+    "question",
+    "answer",
+    "sep",
+    "lookup",
+]
 DIGIT_TOKENS = [str(value) for value in range(10)]
 NAME_TOKENS = [
     "alice",
@@ -34,11 +42,20 @@ NAME_TOKENS = [
     "mallory",
     "niaj",
 ]
+FIELD_TOKENS = ["code", "age", "city", "color", "pet", "fruit"]
+
+
+@dataclass
+class TaskSpec:
+    task_type: str
+    entities_per_sample: int
+    fields: list[str]
+    value_length: int
 
 
 class SyntheticTokenizer:
-    def __init__(self, noise_vocab_size: int) -> None:
-        tokens = SPECIAL_TOKENS + CONTROL_TOKENS + DIGIT_TOKENS + NAME_TOKENS
+    def __init__(self, noise_vocab_size: int, fields: list[str]) -> None:
+        tokens = SPECIAL_TOKENS + CONTROL_TOKENS + DIGIT_TOKENS + NAME_TOKENS + sorted(set(fields))
         tokens += [f"noise_{index}" for index in range(noise_vocab_size)]
         self.stoi = {token: index for index, token in enumerate(tokens)}
         self.itos = {index: token for token, index in self.stoi.items()}
@@ -57,37 +74,51 @@ class DelayedRecallDataset(Dataset):
         *,
         num_samples: int,
         delay_tokens: int,
-        code_length: int,
         noise_vocab_size: int,
         seed: int,
         tokenizer: SyntheticTokenizer,
+        task_spec: TaskSpec,
     ) -> None:
-        self.answer_length = code_length
+        self.answer_length = task_spec.value_length
         self.samples: list[tuple[torch.Tensor, torch.Tensor, torch.Tensor]] = []
         rng = random.Random(seed)
         noise_tokens = [f"noise_{index}" for index in range(noise_vocab_size)]
 
+        if task_spec.entities_per_sample > len(NAME_TOKENS):
+            raise ValueError("entities_per_sample exceeds available synthetic names.")
+
         for _ in range(num_samples):
-            name = rng.choice(NAME_TOKENS)
-            code = [rng.choice(DIGIT_TOKENS) for _ in range(code_length)]
+            names = rng.sample(NAME_TOKENS, k=task_spec.entities_per_sample)
+            facts: dict[tuple[str, str], list[str]] = {}
+            fact_tokens: list[str] = []
+            for entity_index, name in enumerate(names):
+                fact_tokens.append(name)
+                for field in task_spec.fields:
+                    value = [rng.choice(DIGIT_TOKENS) for _ in range(task_spec.value_length)]
+                    facts[(name, field)] = value
+                    fact_tokens.extend([field, *value])
+                if entity_index < len(names) - 1:
+                    fact_tokens.append("sep")
+
+            query_name = rng.choice(names)
+            query_field = rng.choice(task_spec.fields)
+            answer_value = facts[(query_name, query_field)]
             filler = [rng.choice(noise_tokens) for _ in range(delay_tokens)]
             tokens = [
                 "<bos>",
                 "remember",
-                name,
-                "code",
-                *code,
+                *fact_tokens,
                 "context",
                 *filler,
                 "question",
-                name,
-                "code",
+                query_name,
+                query_field,
                 "answer",
-                *code,
+                *answer_value,
                 "<eos>",
             ]
-            answer_start = len(tokens) - code_length - 1
-            answer_positions = list(range(answer_start - 1, answer_start - 1 + code_length))
+            answer_start = len(tokens) - task_spec.value_length - 1
+            answer_positions = list(range(answer_start - 1, answer_start - 1 + task_spec.value_length))
             ids = tokenizer.encode(tokens)
             x = torch.tensor(ids[:-1], dtype=torch.long)
             y = torch.tensor(ids[1:], dtype=torch.long)
@@ -111,10 +142,16 @@ class RecallMetrics:
     ce_loss: float
     answer_token_accuracy: float
     answer_exact_accuracy: float
+    structural_energy: float
+    drift_loss: float
+    core_norm_mean: float
+    core_slot_norm_std: float
+    attractor_distance: float
 
 
 @dataclass
 class RecallResult:
+    task_type: str
     delay_tokens: int
     variant: str
     seed: int
@@ -125,10 +162,17 @@ class RecallResult:
     final_val_ce_loss: float
     final_answer_token_accuracy: float
     final_answer_exact_accuracy: float
+    final_val_structural_energy: float
+    final_val_drift_loss: float
+    final_core_norm_mean: float
+    final_core_slot_norm_std: float
+    final_attractor_distance: float
+    core_trace_path: Optional[str]
 
 
 @dataclass
 class RecallAggregate:
+    task_type: str
     delay_tokens: int
     variant: str
     runs: int
@@ -138,13 +182,43 @@ class RecallAggregate:
     std_answer_token_accuracy: float
     mean_answer_exact_accuracy: float
     std_answer_exact_accuracy: float
+    mean_val_structural_energy: float
+    mean_val_drift_loss: float
+    mean_core_norm_mean: float
+    mean_core_slot_norm_std: float
+    mean_attractor_distance: float
     mean_parameter_count: float
+
+
+def build_task_spec(args: argparse.Namespace) -> TaskSpec:
+    if args.task_type == "single_entity":
+        return TaskSpec(
+            task_type=args.task_type,
+            entities_per_sample=1,
+            fields=["code"],
+            value_length=args.value_length,
+        )
+    return TaskSpec(
+        task_type=args.task_type,
+        entities_per_sample=args.entities_per_sample,
+        fields=list(args.fields),
+        value_length=args.value_length,
+    )
 
 
 def build_loader(dataset: Dataset, batch_size: int, shuffle: bool, seed: int) -> DataLoader:
     generator = torch.Generator()
     generator.manual_seed(seed)
     return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, generator=generator)
+
+
+def resolve_effective_batch_size(args: argparse.Namespace, seq_len: int) -> int:
+    if not args.adaptive_batch_size:
+        return args.batch_size
+    reference = max(args.adaptive_batch_reference_seq_len, 1)
+    scale = (reference / max(seq_len, 1)) ** 2
+    effective = max(1, int(math.floor(args.batch_size * scale)))
+    return min(args.batch_size, effective)
 
 
 def resolve_config(
@@ -165,23 +239,43 @@ def resolve_config(
     return config
 
 
+def measure_core_stats(model: SVFTransformer, core_state: torch.Tensor) -> tuple[float, float, float]:
+    core_norm_mean = float(core_state.norm(dim=-1).mean().item())
+    slot_norm_std = float(core_state.norm(dim=-1).std(dim=1).mean().item())
+    if model.config.use_persistent_core and hasattr(model.core, "attractor"):
+        attractor = model.core.attractor.unsqueeze(0).to(core_state.device)
+        attractor_distance = float((core_state - attractor).pow(2).mean().sqrt().item())
+    else:
+        attractor_distance = 0.0
+    return core_norm_mean, slot_norm_std, attractor_distance
+
+
 @torch.no_grad()
 def evaluate_variant(
     model: SVFTransformer,
     loader: DataLoader,
     *,
     device: str,
-) -> RecallMetrics:
+    collect_traces: bool = False,
+    max_trace_batches: int = 0,
+    max_trace_examples: int = 0,
+) -> tuple[RecallMetrics, list[dict[str, Any]]]:
     model.eval()
     total_loss = 0.0
     total_ce = 0.0
+    total_energy = 0.0
+    total_drift = 0.0
+    total_core_norm = 0.0
+    total_core_slot_std = 0.0
+    total_attractor_distance = 0.0
     batches = 0
     token_correct = 0
     token_total = 0
     exact_correct = 0
     example_total = 0
+    traces: list[dict[str, Any]] = []
 
-    for x, y, answer_mask in loader:
+    for batch_idx, (x, y, answer_mask) in enumerate(loader):
         x = x.to(device)
         y = y.to(device)
         answer_mask = answer_mask.to(device)
@@ -190,6 +284,12 @@ def evaluate_variant(
         assert out.loss is not None and out.ce_loss is not None
         total_loss += float(out.loss.item())
         total_ce += float(out.ce_loss.item())
+        total_energy += float(out.structural_energy.item())
+        total_drift += float(out.drift_loss.item())
+        core_norm_mean, slot_norm_std, attractor_distance = measure_core_stats(model, out.core_state)
+        total_core_norm += core_norm_mean
+        total_core_slot_std += slot_norm_std
+        total_attractor_distance += attractor_distance
         batches += 1
 
         predictions = out.logits.argmax(dim=-1)
@@ -199,13 +299,66 @@ def evaluate_variant(
         exact_correct += int(exact_masked.all(dim=1).sum().item())
         example_total += int(x.size(0))
 
+        if collect_traces and batch_idx < max_trace_batches:
+            slot_norms = out.core_state.norm(dim=-1).detach().cpu()
+            for sample_idx in range(min(max_trace_examples, x.size(0))):
+                traces.append(
+                    {
+                        "batch_index": batch_idx,
+                        "sample_index": sample_idx,
+                        "slot_norms": slot_norms[sample_idx].tolist(),
+                        "core_mean_norm": float(slot_norms[sample_idx].mean().item()),
+                        "core_state": out.core_state[sample_idx].detach().cpu().tolist(),
+                        "structural_energy": float(out.structural_energy.item()),
+                        "drift_loss": float(out.drift_loss.item()),
+                        "attractor_distance": attractor_distance,
+                    }
+                )
+
     model.train()
-    return RecallMetrics(
-        loss=total_loss / max(batches, 1),
-        ce_loss=total_ce / max(batches, 1),
-        answer_token_accuracy=token_correct / max(token_total, 1),
-        answer_exact_accuracy=exact_correct / max(example_total, 1),
+    return (
+        RecallMetrics(
+            loss=total_loss / max(batches, 1),
+            ce_loss=total_ce / max(batches, 1),
+            answer_token_accuracy=token_correct / max(token_total, 1),
+            answer_exact_accuracy=exact_correct / max(example_total, 1),
+            structural_energy=total_energy / max(batches, 1),
+            drift_loss=total_drift / max(batches, 1),
+            core_norm_mean=total_core_norm / max(batches, 1),
+            core_slot_norm_std=total_core_slot_std / max(batches, 1),
+            attractor_distance=total_attractor_distance / max(batches, 1),
+        ),
+        traces,
     )
+
+
+def maybe_write_core_trace(
+    output_dir: Path,
+    *,
+    args: argparse.Namespace,
+    task_spec: TaskSpec,
+    delay_tokens: int,
+    variant: str,
+    seed: int,
+    trace_entries: list[dict[str, Any]],
+) -> Optional[Path]:
+    if not args.save_core_traces:
+        return None
+    trace_dir = output_dir / "core_traces"
+    trace_dir.mkdir(parents=True, exist_ok=True)
+    path = trace_dir / f"delay{delay_tokens}_{variant}_seed{seed}.json"
+    payload = {
+        "task_type": task_spec.task_type,
+        "delay_tokens": delay_tokens,
+        "variant": variant,
+        "seed": seed,
+        "entities_per_sample": task_spec.entities_per_sample,
+        "fields": task_spec.fields,
+        "value_length": task_spec.value_length,
+        "trace_entries": trace_entries,
+    }
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return path
 
 
 def train_variant(
@@ -214,37 +367,41 @@ def train_variant(
     variant: str,
     delay_tokens: int,
     tokenizer: SyntheticTokenizer,
+    task_spec: TaskSpec,
 ) -> RecallResult:
     torch.manual_seed(args.seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(args.seed)
+        torch.cuda.empty_cache()
 
     train_dataset = DelayedRecallDataset(
         num_samples=args.train_samples,
         delay_tokens=delay_tokens,
-        code_length=args.code_length,
         noise_vocab_size=args.noise_vocab_size,
         seed=args.seed,
         tokenizer=tokenizer,
+        task_spec=task_spec,
     )
     val_dataset = DelayedRecallDataset(
         num_samples=args.val_samples,
         delay_tokens=delay_tokens,
-        code_length=args.code_length,
         noise_vocab_size=args.noise_vocab_size,
         seed=args.seed + 10_000,
         tokenizer=tokenizer,
+        task_spec=task_spec,
     )
-    train_loader = build_loader(train_dataset, args.batch_size, shuffle=True, seed=args.seed)
-    val_loader = build_loader(val_dataset, args.batch_size, shuffle=False, seed=args.seed)
+    effective_batch_size = resolve_effective_batch_size(args, train_dataset.sequence_length)
+    train_loader = build_loader(train_dataset, effective_batch_size, shuffle=True, seed=args.seed)
+    val_loader = build_loader(val_dataset, effective_batch_size, shuffle=False, seed=args.seed)
 
     config = resolve_config(args, variant=variant, vocab_size=tokenizer.vocab_size, seq_len=train_dataset.sequence_length)
     model = SVFTransformer(config).to(args.device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
     print(
-        f"\n=== Delayed recall variant={variant} delay={delay_tokens} "
-        f"seq_len={train_dataset.sequence_length} params={count_parameters(model)} ==="
+        f"\n=== Delayed recall variant={variant} task={task_spec.task_type} delay={delay_tokens} "
+        f"seq_len={train_dataset.sequence_length} batch_size={effective_batch_size} "
+        f"params={count_parameters(model)} ==="
     )
     step = 0
     final_train_loss = 0.0
@@ -269,17 +426,35 @@ def train_variant(
 
             step += 1
             if args.eval_interval > 0 and step % args.eval_interval == 0:
-                metrics = evaluate_variant(model, val_loader, device=args.device)
+                metrics, _ = evaluate_variant(model, val_loader, device=args.device)
                 print(
                     f"eval step={step:05d} val_ce={metrics.ce_loss:.4f} "
                     f"answer_token_acc={metrics.answer_token_accuracy:.4f} "
-                    f"answer_exact_acc={metrics.answer_exact_accuracy:.4f}"
+                    f"answer_exact_acc={metrics.answer_exact_accuracy:.4f} "
+                    f"core_norm={metrics.core_norm_mean:.4f}"
                 )
             if step >= args.steps:
                 break
 
-    final_metrics = evaluate_variant(model, val_loader, device=args.device)
+    final_metrics, trace_entries = evaluate_variant(
+        model,
+        val_loader,
+        device=args.device,
+        collect_traces=args.save_core_traces,
+        max_trace_batches=args.trace_batches,
+        max_trace_examples=args.trace_examples,
+    )
+    trace_path = maybe_write_core_trace(
+        Path(args.output_dir),
+        args=args,
+        task_spec=task_spec,
+        delay_tokens=delay_tokens,
+        variant=variant,
+        seed=args.seed,
+        trace_entries=trace_entries,
+    )
     return RecallResult(
+        task_type=task_spec.task_type,
         delay_tokens=delay_tokens,
         variant=variant,
         seed=args.seed,
@@ -290,6 +465,12 @@ def train_variant(
         final_val_ce_loss=final_metrics.ce_loss,
         final_answer_token_accuracy=final_metrics.answer_token_accuracy,
         final_answer_exact_accuracy=final_metrics.answer_exact_accuracy,
+        final_val_structural_energy=final_metrics.structural_energy,
+        final_val_drift_loss=final_metrics.drift_loss,
+        final_core_norm_mean=final_metrics.core_norm_mean,
+        final_core_slot_norm_std=final_metrics.core_slot_norm_std,
+        final_attractor_distance=final_metrics.attractor_distance,
+        core_trace_path=str(trace_path) if trace_path is not None else None,
     )
 
 
@@ -308,12 +489,12 @@ def write_summary(output_dir: Path, results: list[RecallResult]) -> tuple[Path, 
 
 
 def aggregate_results(results: list[RecallResult]) -> list[RecallAggregate]:
-    grouped: dict[tuple[int, str], list[RecallResult]] = {}
+    grouped: dict[tuple[str, int, str], list[RecallResult]] = {}
     for result in results:
-        grouped.setdefault((result.delay_tokens, result.variant), []).append(result)
+        grouped.setdefault((result.task_type, result.delay_tokens, result.variant), []).append(result)
 
     aggregates: list[RecallAggregate] = []
-    for (delay_tokens, variant), items in grouped.items():
+    for (task_type, delay_tokens, variant), items in grouped.items():
         def mean_of(field: str) -> float:
             return statistics.fmean(float(getattr(item, field)) for item in items)
 
@@ -323,6 +504,7 @@ def aggregate_results(results: list[RecallResult]) -> list[RecallAggregate]:
 
         aggregates.append(
             RecallAggregate(
+                task_type=task_type,
                 delay_tokens=delay_tokens,
                 variant=variant,
                 runs=len(items),
@@ -332,10 +514,18 @@ def aggregate_results(results: list[RecallResult]) -> list[RecallAggregate]:
                 std_answer_token_accuracy=std_of("final_answer_token_accuracy"),
                 mean_answer_exact_accuracy=mean_of("final_answer_exact_accuracy"),
                 std_answer_exact_accuracy=std_of("final_answer_exact_accuracy"),
+                mean_val_structural_energy=mean_of("final_val_structural_energy"),
+                mean_val_drift_loss=mean_of("final_val_drift_loss"),
+                mean_core_norm_mean=mean_of("final_core_norm_mean"),
+                mean_core_slot_norm_std=mean_of("final_core_slot_norm_std"),
+                mean_attractor_distance=mean_of("final_attractor_distance"),
                 mean_parameter_count=mean_of("parameter_count"),
             )
         )
-    return sorted(aggregates, key=lambda item: (item.delay_tokens, -item.mean_answer_exact_accuracy, item.mean_val_ce_loss))
+    return sorted(
+        aggregates,
+        key=lambda item: (item.delay_tokens, -item.mean_answer_exact_accuracy, item.mean_val_ce_loss),
+    )
 
 
 def write_aggregate_summary(output_dir: Path, results: list[RecallAggregate]) -> tuple[Path, Path]:
@@ -357,6 +547,7 @@ def write_manifest(
     *,
     args: argparse.Namespace,
     tokenizer: SyntheticTokenizer,
+    task_spec: TaskSpec,
     results: list[RecallResult],
     summary_json: Path,
     summary_csv: Path,
@@ -366,6 +557,10 @@ def write_manifest(
     manifest = {
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "task": "delayed_recall",
+        "task_type": task_spec.task_type,
+        "entities_per_sample": task_spec.entities_per_sample,
+        "fields": task_spec.fields,
+        "value_length": task_spec.value_length,
         "variants": args.variants,
         "delays": args.delays,
         "seeds": args.seeds,
@@ -386,9 +581,14 @@ def write_manifest(
     lines = [
         "# Delayed Recall Manifest",
         "",
+        f"- task_type: `{task_spec.task_type}`",
+        f"- entities_per_sample: `{task_spec.entities_per_sample}`",
+        f"- fields: `{', '.join(task_spec.fields)}`",
+        f"- value_length: `{task_spec.value_length}`",
         f"- variants: `{', '.join(args.variants)}`",
         f"- delays: `{', '.join(str(item) for item in args.delays)}`",
         f"- seeds: `{', '.join(str(item) for item in args.seeds)}`",
+        f"- save_core_traces: `{args.save_core_traces}`",
         f"- vocab_size: `{tokenizer.vocab_size}`",
         f"- summary_json: `{summary_json}`",
         f"- aggregate_json: `{aggregate_json}`",
@@ -398,21 +598,31 @@ def write_manifest(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train SVF variants on a delayed recall task.")
+    parser = argparse.ArgumentParser(description="Train SVF variants on delayed recall tasks.")
     parser.add_argument(
         "--variants",
         nargs="+",
         default=["baseline", "persistent_core"],
         choices=["baseline", "memory", "persistent_core", "core_dynamics", "memory_core", "svf"],
     )
+    parser.add_argument("--task-type", type=str, default="single_entity", choices=["single_entity", "multi_entity"])
     parser.add_argument("--delays", nargs="+", type=int, default=[128, 256, 512, 1024])
     parser.add_argument("--seeds", nargs="+", type=int, default=[42, 43, 44])
     parser.add_argument("--steps", type=int, default=3000)
     parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--adaptive-batch-size", action="store_true", default=True)
+    parser.add_argument("--no-adaptive-batch-size", dest="adaptive_batch_size", action="store_false")
+    parser.add_argument("--adaptive-batch-reference-seq-len", type=int, default=1024)
     parser.add_argument("--train-samples", type=int, default=4096)
     parser.add_argument("--val-samples", type=int, default=512)
-    parser.add_argument("--code-length", type=int, default=5)
+    parser.add_argument("--value-length", dest="value_length", type=int, default=5)
+    parser.add_argument("--code-length", dest="value_length", type=int)
+    parser.add_argument("--entities-per-sample", type=int, default=3)
+    parser.add_argument("--fields", nargs="+", default=["age", "city", "color"])
     parser.add_argument("--noise-vocab-size", type=int, default=64)
+    parser.add_argument("--save-core-traces", action="store_true")
+    parser.add_argument("--trace-batches", type=int, default=2)
+    parser.add_argument("--trace-examples", type=int, default=2)
     parser.add_argument("--d-model", type=int, default=128)
     parser.add_argument("--d-ff", type=int, default=512)
     parser.add_argument("--layers", type=int, default=4)
@@ -429,15 +639,25 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--drift-weight", type=float, default=0.001)
     parser.add_argument("--eval-interval", type=int, default=250)
     parser.add_argument("--log-interval", type=int, default=20)
-    parser.add_argument("--match-baseline-to", type=str, default="persistent_core", choices=["memory", "persistent_core", "memory_core", "svf"])
+    parser.add_argument(
+        "--match-baseline-to",
+        type=str,
+        default="persistent_core",
+        choices=["memory", "persistent_core", "memory_core", "svf"],
+    )
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--output-dir", type=str, default="outputs/experiments/phaseD_delayed_recall")
-    return parser.parse_args()
+    args = parser.parse_args()
+    unknown_fields = sorted(set(args.fields) - set(FIELD_TOKENS))
+    if args.task_type == "multi_entity" and unknown_fields:
+        parser.error(f"Unsupported fields: {', '.join(unknown_fields)}")
+    return args
 
 
 def main() -> None:
     args = parse_args()
-    tokenizer = SyntheticTokenizer(noise_vocab_size=args.noise_vocab_size)
+    task_spec = build_task_spec(args)
+    tokenizer = SyntheticTokenizer(noise_vocab_size=args.noise_vocab_size, fields=task_spec.fields)
     results: list[RecallResult] = []
 
     for delay_tokens in args.delays:
@@ -452,6 +672,7 @@ def main() -> None:
                         variant=variant,
                         delay_tokens=delay_tokens,
                         tokenizer=tokenizer,
+                        task_spec=task_spec,
                     )
                 )
 
@@ -463,6 +684,7 @@ def main() -> None:
         output_dir,
         args=args,
         tokenizer=tokenizer,
+        task_spec=task_spec,
         results=results,
         summary_json=summary_json,
         summary_csv=summary_csv,
@@ -473,10 +695,11 @@ def main() -> None:
     print("\n=== Delayed Recall Aggregate ===")
     for item in aggregate:
         print(
-            f"delay={item.delay_tokens:<4d} "
+            f"delay={item.delay_tokens:<5d} "
             f"variant={item.variant:>16} "
             f"exact_acc={item.mean_answer_exact_accuracy:.4f} "
             f"token_acc={item.mean_answer_token_accuracy:.4f} "
+            f"core_norm={item.mean_core_norm_mean:.4f} "
             f"val_ce={item.mean_val_ce_loss:.4f}"
         )
     print(f"wrote summary to {summary_json}")
