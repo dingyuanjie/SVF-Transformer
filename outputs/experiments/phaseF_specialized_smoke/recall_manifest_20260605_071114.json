@@ -1,0 +1,97 @@
+{
+  "timestamp": "2026-06-05T07:11:14",
+  "task": "delayed_recall",
+  "task_type": "multi_entity",
+  "entities_per_sample": 2,
+  "fields": [
+    "age",
+    "city"
+  ],
+  "value_length": 2,
+  "variants": [
+    "specialized_core"
+  ],
+  "delays": [
+    512
+  ],
+  "seeds": [
+    42
+  ],
+  "args": {
+    "variants": [
+      "specialized_core"
+    ],
+    "task_type": "multi_entity",
+    "delays": [
+      512
+    ],
+    "seeds": [
+      42
+    ],
+    "steps": 1,
+    "batch_size": 32,
+    "adaptive_batch_size": true,
+    "adaptive_batch_reference_seq_len": 1024,
+    "train_samples": 32,
+    "val_samples": 16,
+    "value_length": 2,
+    "entities_per_sample": 2,
+    "fields": [
+      "age",
+      "city"
+    ],
+    "noise_vocab_size": 64,
+    "save_core_traces": true,
+    "trace_batches": 2,
+    "trace_examples": 2,
+    "d_model": 128,
+    "d_ff": 512,
+    "layers": 4,
+    "heads": 4,
+    "dropout": 0.1,
+    "lr": 0.0003,
+    "weight_decay": 0.01,
+    "grad_clip": 1.0,
+    "core_slots": 4,
+    "memory_size": 256,
+    "attractor_strength": 0.05,
+    "drift_scale": 0.1,
+    "conservation_weight": 0.01,
+    "drift_weight": 0.001,
+    "eval_interval": 250,
+    "log_interval": 20,
+    "match_baseline_to": "persistent_core",
+    "device": "cpu",
+    "output_dir": "outputs/experiments/phaseF_specialized_smoke",
+    "seed": 42
+  },
+  "tokenizer_vocab_size": 97,
+  "artifacts": {
+    "summary_json": "outputs\\experiments\\phaseF_specialized_smoke\\recall_summary_20260605_071114.json",
+    "summary_csv": "outputs\\experiments\\phaseF_specialized_smoke\\recall_summary_20260605_071114.csv",
+    "aggregate_json": "outputs\\experiments\\phaseF_specialized_smoke\\recall_aggregate_20260605_071114.json",
+    "aggregate_csv": "outputs\\experiments\\phaseF_specialized_smoke\\recall_aggregate_20260605_071114.csv"
+  },
+  "results": [
+    {
+      "task_type": "multi_entity",
+      "delay_tokens": 512,
+      "variant": "specialized_core",
+      "seed": 42,
+      "steps": 1,
+      "parameter_count": 1222400,
+      "final_train_loss": 63.197505950927734,
+      "final_val_loss": 59.345157623291016,
+      "final_val_ce_loss": 59.33685302734375,
+      "final_answer_token_accuracy": 0.0,
+      "final_answer_exact_accuracy": 0.0,
+      "final_val_structural_energy": 0.001250231172889471,
+      "final_val_drift_loss": 0.0,
+      "final_core_norm_mean": 0.3998100757598877,
+      "final_core_slot_norm_std": 0.014716757461428642,
+      "final_attractor_distance": 0.03535861149430275,
+      "final_slot_diversity_loss": 0.8303217887878418,
+      "core_trace_path": "outputs\\experiments\\phaseF_specialized_smoke\\core_traces\\delay512_specialized_core_seed42.json"
+    }
+  ]
+}

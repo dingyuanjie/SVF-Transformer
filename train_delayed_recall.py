@@ -81,6 +81,7 @@ class DelayedRecallDataset(Dataset):
     ) -> None:
         self.answer_length = task_spec.value_length
         self.samples: list[tuple[torch.Tensor, torch.Tensor, torch.Tensor]] = []
+        self.sample_metadata: list[dict[str, Any]] = []
         rng = random.Random(seed)
         noise_tokens = [f"noise_{index}" for index in range(noise_vocab_size)]
 
@@ -90,12 +91,15 @@ class DelayedRecallDataset(Dataset):
         for _ in range(num_samples):
             names = rng.sample(NAME_TOKENS, k=task_spec.entities_per_sample)
             facts: dict[tuple[str, str], list[str]] = {}
+            facts_by_entity: dict[str, dict[str, list[str]]] = {}
             fact_tokens: list[str] = []
             for entity_index, name in enumerate(names):
                 fact_tokens.append(name)
+                facts_by_entity[name] = {}
                 for field in task_spec.fields:
                     value = [rng.choice(DIGIT_TOKENS) for _ in range(task_spec.value_length)]
                     facts[(name, field)] = value
+                    facts_by_entity[name][field] = value
                     fact_tokens.extend([field, *value])
                 if entity_index < len(names) - 1:
                     fact_tokens.append("sep")
@@ -126,6 +130,15 @@ class DelayedRecallDataset(Dataset):
             for position in answer_positions:
                 answer_mask[position] = True
             self.samples.append((x, y, answer_mask))
+            self.sample_metadata.append(
+                {
+                    "entity_names": names,
+                    "query_name": query_name,
+                    "query_field": query_field,
+                    "answer_value": answer_value,
+                    "facts_by_entity": facts_by_entity,
+                }
+            )
 
         self.sequence_length = len(self.samples[0][0])
 
@@ -134,6 +147,9 @@ class DelayedRecallDataset(Dataset):
 
     def __getitem__(self, index: int) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         return self.samples[index]
+
+    def get_metadata(self, index: int) -> dict[str, Any]:
+        return self.sample_metadata[index]
 
 
 @dataclass
@@ -147,6 +163,8 @@ class RecallMetrics:
     core_norm_mean: float
     core_slot_norm_std: float
     attractor_distance: float
+    slot_diversity_loss: float
+    slot_balance_loss: float
 
 
 @dataclass
@@ -167,6 +185,8 @@ class RecallResult:
     final_core_norm_mean: float
     final_core_slot_norm_std: float
     final_attractor_distance: float
+    final_slot_diversity_loss: float
+    final_slot_balance_loss: float
     core_trace_path: Optional[str]
 
 
@@ -187,6 +207,8 @@ class RecallAggregate:
     mean_core_norm_mean: float
     mean_core_slot_norm_std: float
     mean_attractor_distance: float
+    mean_slot_diversity_loss: float
+    mean_slot_balance_loss: float
     mean_parameter_count: float
 
 
@@ -235,7 +257,14 @@ def resolve_config(
     if variant == "baseline" and args.match_baseline_to is not None:
         reference_config = build_config_for_variant(base_config, args.match_baseline_to)
         target_params = count_parameters(SVFTransformer(reference_config))
-        return auto_match_variant_config(local_args, variant, vocab_size, target_params)
+        config = auto_match_variant_config(local_args, variant, vocab_size, target_params)
+    config = SVFTransformerConfig(
+        **{
+            **config.__dict__,
+            "use_slot_balance_loss": bool(args.slot_balance_loss and config.use_slot_routing),
+            "slot_balance_weight": args.slot_balance_weight,
+        }
+    )
     return config
 
 
@@ -268,12 +297,15 @@ def evaluate_variant(
     total_core_norm = 0.0
     total_core_slot_std = 0.0
     total_attractor_distance = 0.0
+    total_slot_diversity = 0.0
+    total_slot_balance = 0.0
     batches = 0
     token_correct = 0
     token_total = 0
     exact_correct = 0
     example_total = 0
     traces: list[dict[str, Any]] = []
+    dataset_offset = 0
 
     for batch_idx, (x, y, answer_mask) in enumerate(loader):
         x = x.to(device)
@@ -290,6 +322,8 @@ def evaluate_variant(
         total_core_norm += core_norm_mean
         total_core_slot_std += slot_norm_std
         total_attractor_distance += attractor_distance
+        total_slot_diversity += float(out.slot_diversity_loss.item())
+        total_slot_balance += float(out.slot_balance_loss.item())
         batches += 1
 
         predictions = out.logits.argmax(dim=-1)
@@ -302,18 +336,40 @@ def evaluate_variant(
         if collect_traces and batch_idx < max_trace_batches:
             slot_norms = out.core_state.norm(dim=-1).detach().cpu()
             for sample_idx in range(min(max_trace_examples, x.size(0))):
+                metadata: dict[str, Any] = {}
+                if hasattr(loader.dataset, "get_metadata"):
+                    metadata = loader.dataset.get_metadata(dataset_offset + sample_idx)
                 traces.append(
                     {
                         "batch_index": batch_idx,
                         "sample_index": sample_idx,
+                        "dataset_index": dataset_offset + sample_idx,
                         "slot_norms": slot_norms[sample_idx].tolist(),
                         "core_mean_norm": float(slot_norms[sample_idx].mean().item()),
                         "core_state": out.core_state[sample_idx].detach().cpu().tolist(),
+                        "slot_routing_weights": (
+                            out.slot_routing_weights[sample_idx].detach().cpu().tolist()
+                            if out.slot_routing_weights is not None
+                            else None
+                        ),
+                        "slot_read_weights": (
+                            out.slot_read_weights[sample_idx].detach().cpu().tolist()
+                            if out.slot_read_weights is not None
+                            else None
+                        ),
                         "structural_energy": float(out.structural_energy.item()),
                         "drift_loss": float(out.drift_loss.item()),
+                        "slot_diversity_loss": float(out.slot_diversity_loss.item()),
+                        "slot_balance_loss": float(out.slot_balance_loss.item()),
                         "attractor_distance": attractor_distance,
+                        "entity_names": metadata.get("entity_names"),
+                        "query_name": metadata.get("query_name"),
+                        "query_field": metadata.get("query_field"),
+                        "answer_value": metadata.get("answer_value"),
+                        "facts_by_entity": metadata.get("facts_by_entity"),
                     }
                 )
+        dataset_offset += x.size(0)
 
     model.train()
     return (
@@ -327,6 +383,8 @@ def evaluate_variant(
             core_norm_mean=total_core_norm / max(batches, 1),
             core_slot_norm_std=total_core_slot_std / max(batches, 1),
             attractor_distance=total_attractor_distance / max(batches, 1),
+            slot_diversity_loss=total_slot_diversity / max(batches, 1),
+            slot_balance_loss=total_slot_balance / max(batches, 1),
         ),
         traces,
     )
@@ -470,6 +528,8 @@ def train_variant(
         final_core_norm_mean=final_metrics.core_norm_mean,
         final_core_slot_norm_std=final_metrics.core_slot_norm_std,
         final_attractor_distance=final_metrics.attractor_distance,
+        final_slot_diversity_loss=final_metrics.slot_diversity_loss,
+        final_slot_balance_loss=final_metrics.slot_balance_loss,
         core_trace_path=str(trace_path) if trace_path is not None else None,
     )
 
@@ -519,6 +579,8 @@ def aggregate_results(results: list[RecallResult]) -> list[RecallAggregate]:
                 mean_core_norm_mean=mean_of("final_core_norm_mean"),
                 mean_core_slot_norm_std=mean_of("final_core_slot_norm_std"),
                 mean_attractor_distance=mean_of("final_attractor_distance"),
+                mean_slot_diversity_loss=mean_of("final_slot_diversity_loss"),
+                mean_slot_balance_loss=mean_of("final_slot_balance_loss"),
                 mean_parameter_count=mean_of("parameter_count"),
             )
         )
@@ -603,7 +665,17 @@ def parse_args() -> argparse.Namespace:
         "--variants",
         nargs="+",
         default=["baseline", "persistent_core"],
-        choices=["baseline", "memory", "persistent_core", "core_dynamics", "memory_core", "svf"],
+        choices=[
+            "baseline",
+            "memory",
+            "persistent_core",
+            "core_dynamics",
+            "specialized_core",
+            "specialized_core_dynamics",
+            "memory_core",
+            "svf",
+            "specialized_svf",
+        ],
     )
     parser.add_argument("--task-type", type=str, default="single_entity", choices=["single_entity", "multi_entity"])
     parser.add_argument("--delays", nargs="+", type=int, default=[128, 256, 512, 1024])
@@ -637,6 +709,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--drift-scale", type=float, default=0.1)
     parser.add_argument("--conservation-weight", type=float, default=0.01)
     parser.add_argument("--drift-weight", type=float, default=0.001)
+    parser.add_argument("--slot-balance-loss", action="store_true")
+    parser.add_argument("--slot-balance-weight", type=float, default=0.01)
     parser.add_argument("--eval-interval", type=int, default=250)
     parser.add_argument("--log-interval", type=int, default=20)
     parser.add_argument(

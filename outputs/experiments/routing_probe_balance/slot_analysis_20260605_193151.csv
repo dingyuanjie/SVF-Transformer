@@ -1,0 +1,3 @@
+delay_tokens,variant,seed,trace_count,slot_count,slot_usage_entropy,normalized_slot_usage_entropy,dominant_slot_fraction,mean_slot_routing_entropy,mean_slot_read_entropy,mean_offdiag_cosine,max_offdiag_cosine,min_offdiag_cosine,mean_slot_norm_std,mean_core_norm
+32,specialized_core,42,32,4,-0.0,-0.0,1.0,0.9518460255994662,0.0011119842608002983,0.9463428058492793,0.9920522146386797,0.8846103234377084,2.7337876409405975,3.482821509242058
+32,specialized_core,43,32,4,-0.0,-0.0,1.0,0.818127650003419,0.003001949124243305,0.7936842569436918,0.9927520718776109,0.6635281271639373,2.9424856608252705,3.482276789844036

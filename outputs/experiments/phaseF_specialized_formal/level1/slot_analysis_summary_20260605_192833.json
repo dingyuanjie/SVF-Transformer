@@ -1,0 +1,82 @@
+[
+  {
+    "delay_tokens": 512,
+    "variant": "specialized_core",
+    "runs": 3,
+    "slot_count": 4,
+    "mean_normalized_slot_usage_entropy": 0.0,
+    "mean_dominant_slot_fraction": 1.0,
+    "mean_slot_routing_entropy": 0.08367564769640885,
+    "mean_slot_read_entropy": 0.0,
+    "mean_offdiag_cosine": 0.00023088740686334124,
+    "mean_slot_norm_std": 4.604721751695787,
+    "dominant_write_slot_fractions": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.0,
+      0.3333333333333333
+    ],
+    "mean_write_slot_weights": [
+      0.3312395969893095,
+      0.3327892779954482,
+      0.004670219734407906,
+      0.3313009052808344
+    ],
+    "dominant_read_slot_fractions": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "mean_read_slot_weights": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "query_name_write_summary": {},
+    "query_name_read_summary": {},
+    "query_field_write_summary": {},
+    "query_field_read_summary": {}
+  },
+  {
+    "delay_tokens": 512,
+    "variant": "specialized_core_dynamics",
+    "runs": 3,
+    "slot_count": 4,
+    "mean_normalized_slot_usage_entropy": 0.0,
+    "mean_dominant_slot_fraction": 1.0,
+    "mean_slot_routing_entropy": 0.092243040340326,
+    "mean_slot_read_entropy": 0.0,
+    "mean_offdiag_cosine": 0.001109653051480979,
+    "mean_slot_norm_std": 4.5995557729883325,
+    "dominant_write_slot_fractions": [
+      0.3333333333333333,
+      0.6666666666666666,
+      0.0,
+      0.0
+    ],
+    "mean_write_slot_weights": [
+      0.3313090035750108,
+      0.6611443885039623,
+      0.004114461258529306,
+      0.0034321466624975838
+    ],
+    "dominant_read_slot_fractions": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "mean_read_slot_weights": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "query_name_write_summary": {},
+    "query_name_read_summary": {},
+    "query_field_write_summary": {},
+    "query_field_read_summary": {}
+  }
+]

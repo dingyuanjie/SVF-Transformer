@@ -77,6 +77,17 @@ def test_variant_builder_core_dynamics_enables_dynamics_without_memory():
     assert config.use_structural_loss is False
 
 
+def test_variant_builder_specialized_core_enables_routing_and_diversity():
+    base = SVFTransformerConfig(vocab_size=32, d_model=32, n_heads=4, n_layers=2, d_ff=64)
+    config = build_config_for_variant(base, "specialized_core")
+
+    assert config.use_memory is False
+    assert config.use_persistent_core is True
+    assert config.use_structural_dynamics is False
+    assert config.use_slot_routing is True
+    assert config.use_slot_diversity_loss is True
+
+
 def test_baseline_loss_matches_cross_entropy_only():
     base = SVFTransformerConfig(
         vocab_size=32,
@@ -121,3 +132,56 @@ def test_memory_core_variant_uses_core_without_structural_regularization():
     assert config.use_persistent_core is True
     assert config.use_structural_loss is False
     assert torch.allclose(out.loss, out.ce_loss)
+
+
+def test_specialized_core_returns_routing_weights_and_diversity_loss():
+    base = SVFTransformerConfig(
+        vocab_size=32,
+        d_model=32,
+        n_heads=4,
+        n_layers=2,
+        d_ff=64,
+        max_seq_len=16,
+    )
+    config = build_config_for_variant(base, "specialized_core")
+    model = SVFTransformer(config)
+    x = torch.randint(0, config.vocab_size, (2, 16))
+    y = torch.randint(0, config.vocab_size, (2, 16))
+
+    out = model(x, targets=y, use_memory=config.use_memory, write_memory=config.use_memory)
+
+    assert out.loss is not None
+    assert out.slot_routing_weights is not None
+    assert out.slot_read_weights is not None
+    assert out.slot_routing_weights.shape == (2, config.core_slots)
+    assert out.slot_read_weights.shape == (2, config.core_slots)
+    assert torch.allclose(out.slot_routing_weights.sum(dim=-1), torch.ones(2), atol=1e-5)
+    assert torch.allclose(out.slot_read_weights.sum(dim=-1), torch.ones(2), atol=1e-5)
+    assert float(out.slot_diversity_loss.item()) >= 0.0
+
+
+def test_specialized_core_balance_loss_contributes_to_total_loss():
+    base = SVFTransformerConfig(
+        vocab_size=32,
+        d_model=32,
+        n_heads=4,
+        n_layers=2,
+        d_ff=64,
+        max_seq_len=16,
+    )
+    config = build_config_for_variant(base, "specialized_core")
+    config.use_slot_balance_loss = True
+    config.slot_balance_weight = 0.5
+    model = SVFTransformer(config)
+    x = torch.randint(0, config.vocab_size, (2, 16))
+    y = torch.randint(0, config.vocab_size, (2, 16))
+
+    out = model(x, targets=y, use_memory=config.use_memory, write_memory=config.use_memory)
+
+    assert out.loss is not None
+    assert out.ce_loss is not None
+    assert float(out.slot_balance_loss.item()) >= 0.0
+    assert torch.allclose(
+        out.loss,
+        out.ce_loss + config.slot_diversity_weight * out.slot_diversity_loss + config.slot_balance_weight * out.slot_balance_loss,
+    )

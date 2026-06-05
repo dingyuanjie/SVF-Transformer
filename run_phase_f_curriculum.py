@@ -45,7 +45,17 @@ def parse_args() -> argparse.Namespace:
         "--variants",
         nargs="+",
         default=["baseline", "persistent_core"],
-        choices=["baseline", "memory", "persistent_core", "core_dynamics", "memory_core", "svf"],
+        choices=[
+            "baseline",
+            "memory",
+            "persistent_core",
+            "core_dynamics",
+            "specialized_core",
+            "specialized_core_dynamics",
+            "memory_core",
+            "svf",
+            "specialized_svf",
+        ],
     )
     parser.add_argument("--seeds", nargs="+", type=int, default=[42, 43, 44])
     parser.add_argument("--steps", type=int, default=3000)
