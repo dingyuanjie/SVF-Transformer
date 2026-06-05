@@ -1,0 +1,23 @@
+[
+  {
+    "task_type": "multi_entity",
+    "delay_tokens": 8,
+    "variant": "specialized_core",
+    "seed": 42,
+    "steps": 2,
+    "parameter_count": 35168,
+    "final_train_loss": 20.27846908569336,
+    "final_val_loss": 20.320669174194336,
+    "final_val_ce_loss": 20.31155300140381,
+    "final_answer_token_accuracy": 0.0,
+    "final_answer_exact_accuracy": 0.0,
+    "final_val_structural_energy": 0.0026470894226804376,
+    "final_val_drift_loss": 0.0,
+    "final_core_norm_mean": 0.29085029661655426,
+    "final_core_slot_norm_std": 0.011204887181520462,
+    "final_attractor_distance": 0.05144728533923626,
+    "final_slot_diversity_loss": 0.9116156101226807,
+    "final_slot_balance_loss": 0.0,
+    "core_trace_path": "outputs\\experiments\\phaseG_slot_scan_smoke\\specialized_core\\nobalance\\slots_4\\core_traces\\delay8_specialized_core_seed42.json"
+  }
+]

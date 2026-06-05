@@ -1,0 +1,19 @@
+[
+  {
+    "delay_tokens": 8,
+    "variant": "specialized_core",
+    "seed": 42,
+    "trace_count": 2,
+    "slot_count": 4,
+    "slot_usage_entropy": 1.0,
+    "normalized_slot_usage_entropy": 0.5,
+    "dominant_slot_fraction": 0.5,
+    "mean_slot_routing_entropy": 1.9999962128981497,
+    "mean_slot_read_entropy": 1.9999999687076304,
+    "mean_offdiag_cosine": 0.9547313585270466,
+    "max_offdiag_cosine": 0.9730523251907092,
+    "min_offdiag_cosine": 0.9347904200879319,
+    "mean_slot_norm_std": 0.009875383598967932,
+    "mean_core_norm": 0.29099419713020325
+  }
+]

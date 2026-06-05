@@ -9,6 +9,7 @@ This directory stores experiment-facing documentation so the result trail is pre
 - `phaseD/`: long-context scaling and delayed recall plans.
 - `phaseE/`: multi-entity delayed recall and core trace plans.
 - `phaseF/`: slot analysis and curriculum recall plans.
+- `phaseG/`: slot-count routing scan plans.
 - `strict_reproduction/`: stricter protocol reruns and parameter-matched controls.
 
 Large binary artifacts such as checkpoints and raw logs remain under `outputs/experiments/`.
@@ -27,4 +28,5 @@ Each completed run should have:
 - `phaseD/long_context_and_recall.md`: long-context and delayed-recall experiment plan.
 - `phaseE/multi_entity_delayed_recall.md`: multi-entity delayed recall and core trace plan.
 - `phaseF/slot_analysis_and_curriculum.md`: slot analysis and curriculum recall plan.
+- `phaseG/slot_count_scan.md`: slot-count routing scan plan.
 - `strict_reproduction/strict_phase1_parammatch.md`: stricter rerun with train-only tokenizer fitting, independent eval batches, and baseline parameter matching.

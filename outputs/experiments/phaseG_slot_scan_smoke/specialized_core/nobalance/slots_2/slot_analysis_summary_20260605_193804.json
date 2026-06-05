@@ -1,0 +1,110 @@
+[
+  {
+    "delay_tokens": 8,
+    "variant": "specialized_core",
+    "runs": 1,
+    "slot_count": 2,
+    "mean_normalized_slot_usage_entropy": 0.0,
+    "mean_dominant_slot_fraction": 1.0,
+    "mean_slot_routing_entropy": 0.9999998153977713,
+    "mean_slot_read_entropy": 0.9999987629305083,
+    "mean_offdiag_cosine": 0.9547344710571644,
+    "mean_slot_norm_std": 0.001608438789844513,
+    "dominant_write_slot_fractions": [
+      1.0,
+      0.0
+    ],
+    "mean_write_slot_weights": [
+      0.5002413019490668,
+      0.4997586980509332
+    ],
+    "dominant_read_slot_fractions": [
+      1.0,
+      0.0
+    ],
+    "mean_read_slot_weights": [
+      0.5006045699044628,
+      0.4993954300955372
+    ],
+    "query_name_write_summary": {
+      "erin": {
+        "counts": [
+          1,
+          0
+        ],
+        "fractions": [
+          1.0,
+          0.0
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 1.0
+      },
+      "frank": {
+        "counts": [
+          1,
+          0
+        ],
+        "fractions": [
+          1.0,
+          0.0
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 1.0
+      }
+    },
+    "query_name_read_summary": {
+      "erin": {
+        "counts": [
+          1,
+          0
+        ],
+        "fractions": [
+          1.0,
+          0.0
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 1.0
+      },
+      "frank": {
+        "counts": [
+          1,
+          0
+        ],
+        "fractions": [
+          1.0,
+          0.0
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 1.0
+      }
+    },
+    "query_field_write_summary": {
+      "color": {
+        "counts": [
+          2,
+          0
+        ],
+        "fractions": [
+          1.0,
+          0.0
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 1.0
+      }
+    },
+    "query_field_read_summary": {
+      "color": {
+        "counts": [
+          2,
+          0
+        ],
+        "fractions": [
+          1.0,
+          0.0
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 1.0
+      }
+    }
+  }
+]
