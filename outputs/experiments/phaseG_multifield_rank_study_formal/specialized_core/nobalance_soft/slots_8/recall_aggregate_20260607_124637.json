@@ -1,0 +1,22 @@
+[
+  {
+    "task_type": "multi_entity",
+    "delay_tokens": 32,
+    "variant": "specialized_core",
+    "runs": 2,
+    "mean_val_ce_loss": 2.6917885094881058,
+    "std_val_ce_loss": 0.0032070428133010864,
+    "mean_answer_token_accuracy": 0.12890625,
+    "std_answer_token_accuracy": 0.00390625,
+    "mean_answer_exact_accuracy": 0.12890625,
+    "std_answer_exact_accuracy": 0.00390625,
+    "mean_val_structural_energy": 0.13900256995111704,
+    "mean_val_drift_loss": 0.0,
+    "mean_core_norm_mean": 1.900419756770134,
+    "mean_core_slot_norm_std": 2.4566955268383026,
+    "mean_attractor_distance": 0.3728288784623146,
+    "mean_slot_diversity_loss": 0.6976018473505974,
+    "mean_slot_balance_loss": 0.0,
+    "mean_parameter_count": 134016.0
+  }
+]

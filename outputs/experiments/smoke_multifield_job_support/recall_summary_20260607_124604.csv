@@ -1,0 +1,2 @@
+task_type,delay_tokens,variant,seed,steps,parameter_count,final_train_loss,final_val_loss,final_val_ce_loss,final_answer_token_accuracy,final_answer_exact_accuracy,final_val_structural_energy,final_val_drift_loss,final_core_norm_mean,final_core_slot_norm_std,final_attractor_distance,final_slot_diversity_loss,final_slot_balance_loss,core_trace_path
+multi_entity,8,specialized_core,42,2,34240,20.015745162963867,20.35502815246582,20.345468521118164,0.0,0.0,0.0032236608676612377,0.0,0.3210371434688568,0.010940948035567999,0.056777190417051315,0.9559924006462097,0.0,

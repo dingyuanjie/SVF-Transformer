@@ -42,7 +42,7 @@ NAME_TOKENS = [
     "mallory",
     "niaj",
 ]
-FIELD_TOKENS = ["code", "age", "city", "color", "pet", "fruit"]
+FIELD_TOKENS = ["code", "age", "city", "color", "pet", "fruit", "job"]
 
 
 @dataclass

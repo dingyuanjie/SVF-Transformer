@@ -1,0 +1,547 @@
+{
+  "trace_dir": "outputs\\experiments\\phaseG_multifield_rank_study_formal\\specialized_core\\nobalance_soft\\slots_16\\core_traces",
+  "trace_entries": 64,
+  "metadata": {
+    "task_type": "multi_entity",
+    "delay_tokens": 32,
+    "variant": "specialized_core",
+    "fields": [
+      "color",
+      "city",
+      "age",
+      "job"
+    ],
+    "value_length": 1,
+    "top1_routing": false,
+    "field_order_mode": "fixed",
+    "remember_position_mode": "front"
+  },
+  "write_probe": {
+    "strict": {
+      "same_structure_diff_value": {
+        "name": "same_structure_diff_value",
+        "total_pairs": 13,
+        "slot_match_rate": 0.38461538461538464,
+        "slot_flip_rate": 0.6153846153846154,
+        "examples": [
+          {
+            "structure_key": "query_name=frank | query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "7",
+            "slot_b": 0
+          },
+          {
+            "structure_key": "query_name=carol | query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "3",
+            "slot_a": 3,
+            "value_b": "1",
+            "slot_b": 0
+          },
+          {
+            "structure_key": "query_name=heidi | query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "5",
+            "slot_a": 3,
+            "value_b": "2",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_name=niaj | query_field=age | query_entity_index=0 | query_field_index=2 | query_fact_token_start=7 | query_fact_token_end=8 | query_fact_to_context_distance=34 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "5",
+            "slot_a": 3,
+            "value_b": "7",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_name=niaj | query_field=age | query_entity_index=0 | query_field_index=2 | query_fact_token_start=7 | query_fact_token_end=8 | query_fact_to_context_distance=34 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "5",
+            "slot_a": 3,
+            "value_b": "4",
+            "slot_b": 0
+          },
+          {
+            "structure_key": "query_name=niaj | query_field=age | query_entity_index=0 | query_field_index=2 | query_fact_token_start=7 | query_fact_token_end=8 | query_fact_to_context_distance=34 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "7",
+            "slot_a": 3,
+            "value_b": "4",
+            "slot_b": 0
+          },
+          {
+            "structure_key": "query_name=niaj | query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "1",
+            "slot_a": 3,
+            "value_b": "4",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_name=frank | query_field=city | query_entity_index=2 | query_field_index=1 | query_fact_token_start=25 | query_fact_token_end=26 | query_fact_to_context_distance=16 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "8",
+            "slot_a": 3,
+            "value_b": "5",
+            "slot_b": 0
+          }
+        ]
+      },
+      "same_value_diff_structure": {
+        "name": "same_value_diff_structure",
+        "total_pairs": 186,
+        "slot_match_rate": 0.543010752688172,
+        "slot_flip_rate": 0.456989247311828,
+        "examples": [
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=frank | query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=carol | query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=frank | query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=grace | query_field=job | query_entity_index=2 | query_field_index=3 | query_fact_token_start=29 | query_fact_token_end=30 | query_fact_to_context_distance=12 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=frank | query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=ivan | query_field=color | query_entity_index=1 | query_field_index=0 | query_fact_token_start=13 | query_fact_token_end=14 | query_fact_to_context_distance=28 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=frank | query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=niaj | query_field=color | query_entity_index=2 | query_field_index=0 | query_fact_token_start=23 | query_fact_token_end=24 | query_fact_to_context_distance=18 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=frank | query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=judy | query_field=city | query_entity_index=0 | query_field_index=1 | query_fact_token_start=5 | query_fact_token_end=6 | query_fact_to_context_distance=36 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=carol | query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=grace | query_field=job | query_entity_index=2 | query_field_index=3 | query_fact_token_start=29 | query_fact_token_end=30 | query_fact_to_context_distance=12 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=carol | query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=ivan | query_field=color | query_entity_index=1 | query_field_index=0 | query_fact_token_start=13 | query_fact_token_end=14 | query_fact_to_context_distance=28 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=carol | query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=niaj | query_field=color | query_entity_index=2 | query_field_index=0 | query_fact_token_start=23 | query_fact_token_end=24 | query_fact_to_context_distance=18 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          }
+        ]
+      },
+      "structure_minus_value_match_rate": -0.15839536807278737
+    },
+    "positional": {
+      "same_structure_diff_value": {
+        "name": "same_structure_diff_value",
+        "total_pairs": 124,
+        "slot_match_rate": 0.5725806451612904,
+        "slot_flip_rate": 0.42741935483870963,
+        "examples": [
+          {
+            "structure_key": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "3",
+            "slot_a": 3,
+            "value_b": "0",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "5",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "2",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "9",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "1",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "9",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "4",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "7",
+            "slot_b": 0
+          }
+        ]
+      },
+      "same_value_diff_structure": {
+        "name": "same_value_diff_structure",
+        "total_pairs": 180,
+        "slot_match_rate": 0.5444444444444444,
+        "slot_flip_rate": 0.4555555555555556,
+        "examples": [
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=job | query_entity_index=2 | query_field_index=3 | query_fact_token_start=29 | query_fact_token_end=30 | query_fact_to_context_distance=12 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=color | query_entity_index=1 | query_field_index=0 | query_fact_token_start=13 | query_fact_token_end=14 | query_fact_to_context_distance=28 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=color | query_entity_index=2 | query_field_index=0 | query_fact_token_start=23 | query_fact_token_end=24 | query_fact_to_context_distance=18 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=city | query_entity_index=0 | query_field_index=1 | query_fact_token_start=5 | query_fact_token_end=6 | query_fact_to_context_distance=36 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=job | query_entity_index=2 | query_field_index=3 | query_fact_token_start=29 | query_fact_token_end=30 | query_fact_to_context_distance=12 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=color | query_entity_index=1 | query_field_index=0 | query_fact_token_start=13 | query_fact_token_end=14 | query_fact_to_context_distance=28 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=color | query_entity_index=2 | query_field_index=0 | query_fact_token_start=23 | query_fact_token_end=24 | query_fact_to_context_distance=18 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          }
+        ]
+      },
+      "structure_minus_value_match_rate": 0.02813620071684597
+    }
+  },
+  "read_probe": {
+    "strict": {
+      "same_structure_diff_value": {
+        "name": "same_structure_diff_value",
+        "total_pairs": 13,
+        "slot_match_rate": 0.38461538461538464,
+        "slot_flip_rate": 0.6153846153846154,
+        "examples": [
+          {
+            "structure_key": "query_name=frank | query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "7",
+            "slot_b": 0
+          },
+          {
+            "structure_key": "query_name=carol | query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "3",
+            "slot_a": 3,
+            "value_b": "1",
+            "slot_b": 0
+          },
+          {
+            "structure_key": "query_name=heidi | query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "5",
+            "slot_a": 3,
+            "value_b": "2",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_name=niaj | query_field=age | query_entity_index=0 | query_field_index=2 | query_fact_token_start=7 | query_fact_token_end=8 | query_fact_to_context_distance=34 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "5",
+            "slot_a": 3,
+            "value_b": "7",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_name=niaj | query_field=age | query_entity_index=0 | query_field_index=2 | query_fact_token_start=7 | query_fact_token_end=8 | query_fact_to_context_distance=34 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "5",
+            "slot_a": 3,
+            "value_b": "4",
+            "slot_b": 0
+          },
+          {
+            "structure_key": "query_name=niaj | query_field=age | query_entity_index=0 | query_field_index=2 | query_fact_token_start=7 | query_fact_token_end=8 | query_fact_to_context_distance=34 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "7",
+            "slot_a": 3,
+            "value_b": "4",
+            "slot_b": 0
+          },
+          {
+            "structure_key": "query_name=niaj | query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "1",
+            "slot_a": 3,
+            "value_b": "4",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_name=frank | query_field=city | query_entity_index=2 | query_field_index=1 | query_fact_token_start=25 | query_fact_token_end=26 | query_fact_to_context_distance=16 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "8",
+            "slot_a": 3,
+            "value_b": "5",
+            "slot_b": 0
+          }
+        ]
+      },
+      "same_value_diff_structure": {
+        "name": "same_value_diff_structure",
+        "total_pairs": 186,
+        "slot_match_rate": 0.543010752688172,
+        "slot_flip_rate": 0.456989247311828,
+        "examples": [
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=frank | query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=carol | query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=frank | query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=grace | query_field=job | query_entity_index=2 | query_field_index=3 | query_fact_token_start=29 | query_fact_token_end=30 | query_fact_to_context_distance=12 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=frank | query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=ivan | query_field=color | query_entity_index=1 | query_field_index=0 | query_fact_token_start=13 | query_fact_token_end=14 | query_fact_to_context_distance=28 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=frank | query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=niaj | query_field=color | query_entity_index=2 | query_field_index=0 | query_fact_token_start=23 | query_fact_token_end=24 | query_fact_to_context_distance=18 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=frank | query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=judy | query_field=city | query_entity_index=0 | query_field_index=1 | query_fact_token_start=5 | query_fact_token_end=6 | query_fact_to_context_distance=36 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=carol | query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=grace | query_field=job | query_entity_index=2 | query_field_index=3 | query_fact_token_start=29 | query_fact_token_end=30 | query_fact_to_context_distance=12 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=carol | query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=ivan | query_field=color | query_entity_index=1 | query_field_index=0 | query_fact_token_start=13 | query_fact_token_end=14 | query_fact_to_context_distance=28 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_name=carol | query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_name=niaj | query_field=color | query_entity_index=2 | query_field_index=0 | query_fact_token_start=23 | query_fact_token_end=24 | query_fact_to_context_distance=18 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          }
+        ]
+      },
+      "structure_minus_value_match_rate": -0.15839536807278737
+    },
+    "positional": {
+      "same_structure_diff_value": {
+        "name": "same_structure_diff_value",
+        "total_pairs": 124,
+        "slot_match_rate": 0.5725806451612904,
+        "slot_flip_rate": 0.42741935483870963,
+        "examples": [
+          {
+            "structure_key": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "3",
+            "slot_a": 3,
+            "value_b": "0",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "5",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "2",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "9",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "1",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "9",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "4",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "query_field=job | query_entity_index=1 | query_field_index=3 | query_fact_token_start=19 | query_fact_token_end=20 | query_fact_to_context_distance=22 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "value_a": "6",
+            "slot_a": 3,
+            "value_b": "7",
+            "slot_b": 0
+          }
+        ]
+      },
+      "same_value_diff_structure": {
+        "name": "same_value_diff_structure",
+        "total_pairs": 180,
+        "slot_match_rate": 0.5444444444444444,
+        "slot_flip_rate": 0.4555555555555556,
+        "examples": [
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=job | query_entity_index=2 | query_field_index=3 | query_fact_token_start=29 | query_fact_token_end=30 | query_fact_to_context_distance=12 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=color | query_entity_index=1 | query_field_index=0 | query_fact_token_start=13 | query_fact_token_end=14 | query_fact_to_context_distance=28 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=color | query_entity_index=2 | query_field_index=0 | query_fact_token_start=23 | query_fact_token_end=24 | query_fact_to_context_distance=18 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=job | query_entity_index=0 | query_field_index=3 | query_fact_token_start=9 | query_fact_token_end=10 | query_fact_to_context_distance=32 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=city | query_entity_index=0 | query_field_index=1 | query_fact_token_start=5 | query_fact_token_end=6 | query_fact_to_context_distance=36 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=job | query_entity_index=2 | query_field_index=3 | query_fact_token_start=29 | query_fact_token_end=30 | query_fact_to_context_distance=12 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=color | query_entity_index=1 | query_field_index=0 | query_fact_token_start=13 | query_fact_token_end=14 | query_fact_to_context_distance=28 | query_fact_position_bucket=front | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          },
+          {
+            "structure_key": "value=3",
+            "value_a": "query_field=city | query_entity_index=3 | query_field_index=1 | query_fact_token_start=35 | query_fact_token_end=36 | query_fact_to_context_distance=6 | query_fact_position_bucket=back | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_a": 3,
+            "value_b": "query_field=color | query_entity_index=2 | query_field_index=0 | query_fact_token_start=23 | query_fact_token_end=24 | query_fact_to_context_distance=18 | query_fact_position_bucket=middle | remember_position_mode=front | field_order_signature=color,city,age,job",
+            "slot_b": 3
+          }
+        ]
+      },
+      "structure_minus_value_match_rate": 0.02813620071684597
+    }
+  }
+}
