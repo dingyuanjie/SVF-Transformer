@@ -1,0 +1,121 @@
+{
+  "timestamp": "2026-06-07T10:46:51",
+  "task": "delayed_recall",
+  "task_type": "multi_entity",
+  "entities_per_sample": 4,
+  "fields": [
+    "color"
+  ],
+  "value_length": 1,
+  "variants": [
+    "specialized_core"
+  ],
+  "delays": [
+    32
+  ],
+  "seeds": [
+    42,
+    43
+  ],
+  "args": {
+    "variants": [
+      "specialized_core"
+    ],
+    "task_type": "multi_entity",
+    "delays": [
+      32
+    ],
+    "seeds": [
+      42,
+      43
+    ],
+    "steps": 300,
+    "batch_size": 16,
+    "adaptive_batch_size": true,
+    "adaptive_batch_reference_seq_len": 1024,
+    "train_samples": 512,
+    "val_samples": 128,
+    "value_length": 1,
+    "entities_per_sample": 4,
+    "fields": [
+      "color"
+    ],
+    "noise_vocab_size": 64,
+    "save_core_traces": true,
+    "trace_batches": 8,
+    "trace_examples": 4,
+    "d_model": 64,
+    "d_ff": 128,
+    "layers": 1,
+    "heads": 4,
+    "dropout": 0.1,
+    "lr": 0.0003,
+    "weight_decay": 0.01,
+    "grad_clip": 1.0,
+    "core_slots": 8,
+    "memory_size": 256,
+    "attractor_strength": 0.05,
+    "drift_scale": 0.1,
+    "conservation_weight": 0.01,
+    "drift_weight": 0.001,
+    "slot_balance_loss": true,
+    "slot_balance_weight": 0.05,
+    "eval_interval": 250,
+    "log_interval": 20,
+    "match_baseline_to": "persistent_core",
+    "device": "cuda",
+    "output_dir": "outputs\\experiments\\phaseG_slot_scan\\specialized_core\\balance\\slots_8",
+    "seed": 43
+  },
+  "tokenizer_vocab_size": 96,
+  "artifacts": {
+    "summary_json": "outputs\\experiments\\phaseG_slot_scan\\specialized_core\\balance\\slots_8\\recall_summary_20260607_104651.json",
+    "summary_csv": "outputs\\experiments\\phaseG_slot_scan\\specialized_core\\balance\\slots_8\\recall_summary_20260607_104651.csv",
+    "aggregate_json": "outputs\\experiments\\phaseG_slot_scan\\specialized_core\\balance\\slots_8\\recall_aggregate_20260607_104651.json",
+    "aggregate_csv": "outputs\\experiments\\phaseG_slot_scan\\specialized_core\\balance\\slots_8\\recall_aggregate_20260607_104651.csv"
+  },
+  "results": [
+    {
+      "task_type": "multi_entity",
+      "delay_tokens": 32,
+      "variant": "specialized_core",
+      "seed": 42,
+      "steps": 300,
+      "parameter_count": 132288,
+      "final_train_loss": 3.3630897998809814,
+      "final_val_loss": 3.1837134063243866,
+      "final_val_ce_loss": 3.1719658374786377,
+      "final_answer_token_accuracy": 0.1328125,
+      "final_answer_exact_accuracy": 0.1328125,
+      "final_val_structural_energy": 0.1769144870340824,
+      "final_val_drift_loss": 0.0,
+      "final_core_norm_mean": 2.474647134542465,
+      "final_core_slot_norm_std": 2.437413513660431,
+      "final_attractor_distance": 0.42061202973127365,
+      "final_slot_diversity_loss": 0.9095840156078339,
+      "final_slot_balance_loss": 0.053034734446555376,
+      "core_trace_path": "outputs\\experiments\\phaseG_slot_scan\\specialized_core\\balance\\slots_8\\core_traces\\delay32_specialized_core_seed42.json"
+    },
+    {
+      "task_type": "multi_entity",
+      "delay_tokens": 32,
+      "variant": "specialized_core",
+      "seed": 43,
+      "steps": 300,
+      "parameter_count": 132288,
+      "final_train_loss": 3.389296531677246,
+      "final_val_loss": 3.1639738976955414,
+      "final_val_ce_loss": 3.152686297893524,
+      "final_answer_token_accuracy": 0.1015625,
+      "final_answer_exact_accuracy": 0.1015625,
+      "final_val_structural_energy": 0.1709634717553854,
+      "final_val_drift_loss": 0.0,
+      "final_core_norm_mean": 2.3487760722637177,
+      "final_core_slot_norm_std": 2.4899172484874725,
+      "final_attractor_distance": 0.4134772717952728,
+      "final_slot_diversity_loss": 0.8311293199658394,
+      "final_slot_balance_loss": 0.059525284450501204,
+      "core_trace_path": "outputs\\experiments\\phaseG_slot_scan\\specialized_core\\balance\\slots_8\\core_traces\\delay32_specialized_core_seed43.json"
+    }
+  ]
+}
