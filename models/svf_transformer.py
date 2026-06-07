@@ -28,6 +28,7 @@ class SVFTransformerConfig:
     use_structural_dynamics: bool = True
     use_structural_loss: bool = True
     use_slot_routing: bool = False
+    use_top1_routing: bool = False
     use_slot_diversity_loss: bool = False
     slot_diversity_weight: float = 0.01
     use_slot_balance_loss: bool = False
@@ -140,7 +141,14 @@ class PersistentCore(nn.Module):
         if self.config.use_slot_routing:
             route_query = self.slot_router(summary)
             route_logits = torch.einsum("bd,sd->bs", route_query, self.slot_keys) / (self.config.d_model**0.5)
-            slot_routing_weights = torch.softmax(route_logits, dim=-1)
+            route_probabilities = torch.softmax(route_logits, dim=-1)
+            if self.config.use_top1_routing:
+                top_indices = route_probabilities.argmax(dim=-1, keepdim=True)
+                hard_assignments = torch.zeros_like(route_probabilities).scatter_(1, top_indices, 1.0)
+                # Straight-through routing keeps a hard write decision with soft gradients.
+                slot_routing_weights = hard_assignments - route_probabilities.detach() + route_probabilities
+            else:
+                slot_routing_weights = route_probabilities
             repeated_summary = repeated_summary + self.slot_embeddings.unsqueeze(0)
             repeated_summary = repeated_summary * slot_routing_weights.unsqueeze(-1)
         repeated_summary = repeated_summary.reshape_as(flat_core)

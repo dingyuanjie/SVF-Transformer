@@ -1,0 +1,124 @@
+{
+  "timestamp": "2026-06-07T12:17:59",
+  "task": "delayed_recall",
+  "task_type": "multi_entity",
+  "entities_per_sample": 4,
+  "fields": [
+    "color"
+  ],
+  "value_length": 1,
+  "variants": [
+    "specialized_core"
+  ],
+  "delays": [
+    32
+  ],
+  "seeds": [
+    42,
+    43
+  ],
+  "args": {
+    "variants": [
+      "specialized_core"
+    ],
+    "task_type": "multi_entity",
+    "delays": [
+      32
+    ],
+    "seeds": [
+      42,
+      43
+    ],
+    "steps": 300,
+    "batch_size": 16,
+    "adaptive_batch_size": true,
+    "adaptive_batch_reference_seq_len": 1024,
+    "train_samples": 512,
+    "val_samples": 128,
+    "value_length": 1,
+    "entities_per_sample": 4,
+    "fields": [
+      "color"
+    ],
+    "noise_vocab_size": 64,
+    "field_order_mode": "fixed",
+    "remember_position_mode": "random",
+    "save_core_traces": true,
+    "trace_batches": 8,
+    "trace_examples": 4,
+    "d_model": 64,
+    "d_ff": 128,
+    "layers": 1,
+    "heads": 4,
+    "dropout": 0.1,
+    "lr": 0.0003,
+    "weight_decay": 0.01,
+    "grad_clip": 1.0,
+    "core_slots": 16,
+    "memory_size": 256,
+    "attractor_strength": 0.05,
+    "drift_scale": 0.1,
+    "conservation_weight": 0.01,
+    "drift_weight": 0.001,
+    "slot_balance_loss": false,
+    "slot_balance_weight": 0.01,
+    "top1_routing": false,
+    "eval_interval": 250,
+    "log_interval": 20,
+    "match_baseline_to": "persistent_core",
+    "device": "cuda",
+    "output_dir": "outputs\\experiments\\phaseG_position_perturbation_formal\\remember_random\\soft\\specialized_core\\slots_16",
+    "seed": 43
+  },
+  "tokenizer_vocab_size": 96,
+  "artifacts": {
+    "summary_json": "outputs\\experiments\\phaseG_position_perturbation_formal\\remember_random\\soft\\specialized_core\\slots_16\\recall_summary_20260607_121759.json",
+    "summary_csv": "outputs\\experiments\\phaseG_position_perturbation_formal\\remember_random\\soft\\specialized_core\\slots_16\\recall_summary_20260607_121759.csv",
+    "aggregate_json": "outputs\\experiments\\phaseG_position_perturbation_formal\\remember_random\\soft\\specialized_core\\slots_16\\recall_aggregate_20260607_121759.json",
+    "aggregate_csv": "outputs\\experiments\\phaseG_position_perturbation_formal\\remember_random\\soft\\specialized_core\\slots_16\\recall_aggregate_20260607_121759.csv"
+  },
+  "results": [
+    {
+      "task_type": "multi_entity",
+      "delay_tokens": 32,
+      "variant": "specialized_core",
+      "seed": 42,
+      "steps": 300,
+      "parameter_count": 134336,
+      "final_train_loss": 3.961299180984497,
+      "final_val_loss": 3.8308143615722656,
+      "final_val_ce_loss": 3.8222432732582092,
+      "final_answer_token_accuracy": 0.0,
+      "final_answer_exact_accuracy": 0.0,
+      "final_val_structural_energy": 0.08805861603468657,
+      "final_val_drift_loss": 0.0,
+      "final_core_norm_mean": 1.6179158240556717,
+      "final_core_slot_norm_std": 1.794184535741806,
+      "final_attractor_distance": 0.2967466190457344,
+      "final_slot_diversity_loss": 0.8571082726120949,
+      "final_slot_balance_loss": 0.0,
+      "core_trace_path": "outputs\\experiments\\phaseG_position_perturbation_formal\\remember_random\\soft\\specialized_core\\slots_16\\core_traces\\delay32_specialized_core_seed42.json"
+    },
+    {
+      "task_type": "multi_entity",
+      "delay_tokens": 32,
+      "variant": "specialized_core",
+      "seed": 43,
+      "steps": 300,
+      "parameter_count": 134336,
+      "final_train_loss": 3.9195406436920166,
+      "final_val_loss": 3.70254448056221,
+      "final_val_ce_loss": 3.6943774223327637,
+      "final_answer_token_accuracy": 0.0234375,
+      "final_answer_exact_accuracy": 0.0234375,
+      "final_val_structural_energy": 0.08099002111703157,
+      "final_val_drift_loss": 0.0,
+      "final_core_norm_mean": 1.458584412932396,
+      "final_core_slot_norm_std": 1.805408850312233,
+      "final_attractor_distance": 0.28458738327026367,
+      "final_slot_diversity_loss": 0.8167065009474754,
+      "final_slot_balance_loss": 0.0,
+      "core_trace_path": "outputs\\experiments\\phaseG_position_perturbation_formal\\remember_random\\soft\\specialized_core\\slots_16\\core_traces\\delay32_specialized_core_seed43.json"
+    }
+  ]
+}

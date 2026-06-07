@@ -68,6 +68,29 @@ class SyntheticTokenizer:
         return [self.stoi[token] for token in tokens]
 
 
+def serialize_fact_key(name: str, field: str) -> str:
+    return f"{name}.{field}"
+
+
+def split_filler_tokens(
+    filler: list[str],
+    *,
+    remember_position_mode: str,
+    rng: random.Random,
+) -> tuple[list[str], list[str]]:
+    if remember_position_mode == "front":
+        return [], filler
+    if remember_position_mode == "middle":
+        midpoint = len(filler) // 2
+        return filler[:midpoint], filler[midpoint:]
+    if remember_position_mode == "back":
+        return filler, []
+    if remember_position_mode == "random":
+        split_index = rng.randint(0, len(filler))
+        return filler[:split_index], filler[split_index:]
+    raise ValueError(f"Unsupported remember_position_mode: {remember_position_mode}")
+
+
 class DelayedRecallDataset(Dataset):
     def __init__(
         self,
@@ -78,6 +101,8 @@ class DelayedRecallDataset(Dataset):
         seed: int,
         tokenizer: SyntheticTokenizer,
         task_spec: TaskSpec,
+        field_order_mode: str = "fixed",
+        remember_position_mode: str = "front",
     ) -> None:
         self.answer_length = task_spec.value_length
         self.samples: list[tuple[torch.Tensor, torch.Tensor, torch.Tensor]] = []
@@ -92,28 +117,64 @@ class DelayedRecallDataset(Dataset):
             names = rng.sample(NAME_TOKENS, k=task_spec.entities_per_sample)
             facts: dict[tuple[str, str], list[str]] = {}
             facts_by_entity: dict[str, dict[str, list[str]]] = {}
-            fact_tokens: list[str] = []
-            for entity_index, name in enumerate(names):
-                fact_tokens.append(name)
+
+            for name in names:
                 facts_by_entity[name] = {}
                 for field in task_spec.fields:
                     value = [rng.choice(DIGIT_TOKENS) for _ in range(task_spec.value_length)]
                     facts[(name, field)] = value
                     facts_by_entity[name][field] = value
+
+            fact_tokens: list[str] = []
+            entity_spans: dict[str, dict[str, int]] = {}
+            fact_spans: dict[str, dict[str, int]] = {}
+            field_orders_by_entity: dict[str, list[str]] = {}
+            for entity_index, name in enumerate(names):
+                entity_start = len(fact_tokens)
+                fact_tokens.append(name)
+                if field_order_mode == "shuffled":
+                    field_order = list(task_spec.fields)
+                    rng.shuffle(field_order)
+                else:
+                    field_order = list(task_spec.fields)
+                field_orders_by_entity[name] = field_order
+                for field in field_order:
+                    value = facts[(name, field)]
+                    field_start = len(fact_tokens)
                     fact_tokens.extend([field, *value])
+                    field_end = len(fact_tokens) - 1
+                    fact_spans[serialize_fact_key(name, field)] = {
+                        "start": field_start,
+                        "end": field_end,
+                        "entity_index": entity_index,
+                        "field_index": field_order.index(field),
+                    }
                 if entity_index < len(names) - 1:
                     fact_tokens.append("sep")
+                entity_spans[name] = {
+                    "start": entity_start,
+                    "end": len(fact_tokens) - 1,
+                    "entity_index": entity_index,
+                }
 
             query_name = rng.choice(names)
             query_field = rng.choice(task_spec.fields)
+            query_entity_index = names.index(query_name)
+            query_field_index = field_orders_by_entity[query_name].index(query_field)
             answer_value = facts[(query_name, query_field)]
             filler = [rng.choice(noise_tokens) for _ in range(delay_tokens)]
+            prefix_filler, suffix_filler = split_filler_tokens(
+                filler,
+                remember_position_mode=remember_position_mode,
+                rng=rng,
+            )
             tokens = [
                 "<bos>",
+                *prefix_filler,
                 "remember",
                 *fact_tokens,
                 "context",
-                *filler,
+                *suffix_filler,
                 "question",
                 query_name,
                 query_field,
@@ -121,8 +182,32 @@ class DelayedRecallDataset(Dataset):
                 *answer_value,
                 "<eos>",
             ]
+            remember_token_index = 1 + len(prefix_filler)
+            fact_tokens_start = remember_token_index + 1
+            fact_tokens_end = fact_tokens_start + len(fact_tokens) - 1
+            context_token_index = fact_tokens_end + 1
+            suffix_filler_start = context_token_index + 1
+            suffix_filler_end = suffix_filler_start + len(suffix_filler) - 1
+            question_token_index = suffix_filler_end + 1 if suffix_filler else context_token_index + 1
+            query_name_token_index = question_token_index + 1
+            query_field_token_index = question_token_index + 2
             answer_start = len(tokens) - task_spec.value_length - 1
             answer_positions = list(range(answer_start - 1, answer_start - 1 + task_spec.value_length))
+            answer_token_start = answer_start
+            answer_token_end = answer_start + task_spec.value_length - 1
+            query_fact_span = fact_spans[serialize_fact_key(query_name, query_field)]
+            query_entity_span = entity_spans[query_name]
+            query_fact_position_ratio = (
+                (query_fact_span["start"] - fact_tokens_start) / max(len(fact_tokens) - 1, 1)
+                if fact_tokens
+                else 0.0
+            )
+            if query_fact_position_ratio < 1.0 / 3.0:
+                query_fact_bucket = "front"
+            elif query_fact_position_ratio < 2.0 / 3.0:
+                query_fact_bucket = "middle"
+            else:
+                query_fact_bucket = "back"
             ids = tokenizer.encode(tokens)
             x = torch.tensor(ids[:-1], dtype=torch.long)
             y = torch.tensor(ids[1:], dtype=torch.long)
@@ -133,9 +218,55 @@ class DelayedRecallDataset(Dataset):
             self.sample_metadata.append(
                 {
                     "entity_names": names,
+                    "entity_count": len(names),
                     "query_name": query_name,
+                    "query_name_initial": query_name[0],
+                    "query_entity_index": query_entity_index,
+                    "query_entity_bucket": (
+                        "front_half"
+                        if query_entity_index < max(1, math.ceil(len(names) / 2))
+                        else "back_half"
+                    ),
                     "query_field": query_field,
+                    "query_field_index": query_field_index,
                     "answer_value": answer_value,
+                    "answer_first_token": answer_value[0] if answer_value else None,
+                    "field_order_mode": field_order_mode,
+                    "remember_position_mode": remember_position_mode,
+                    "remember_token_index": remember_token_index,
+                    "fact_tokens_start": fact_tokens_start,
+                    "fact_tokens_end": fact_tokens_end,
+                    "context_token_index": context_token_index,
+                    "prefix_noise_length": len(prefix_filler),
+                    "suffix_noise_length": len(suffix_filler),
+                    "question_token_index": question_token_index,
+                    "query_name_token_index": query_name_token_index,
+                    "query_field_token_index": query_field_token_index,
+                    "answer_token_start": answer_token_start,
+                    "answer_token_end": answer_token_end,
+                    "query_entity_token_start": fact_tokens_start + query_entity_span["start"],
+                    "query_entity_token_end": fact_tokens_start + query_entity_span["end"],
+                    "query_fact_token_start": fact_tokens_start + query_fact_span["start"],
+                    "query_fact_token_end": fact_tokens_start + query_fact_span["end"],
+                    "query_fact_position_ratio": query_fact_position_ratio,
+                    "query_fact_position_bucket": query_fact_bucket,
+                    "entity_spans": {
+                        key: {
+                            **value,
+                            "token_start": fact_tokens_start + value["start"],
+                            "token_end": fact_tokens_start + value["end"],
+                        }
+                        for key, value in entity_spans.items()
+                    },
+                    "fact_spans": {
+                        key: {
+                            **value,
+                            "token_start": fact_tokens_start + value["start"],
+                            "token_end": fact_tokens_start + value["end"],
+                        }
+                        for key, value in fact_spans.items()
+                    },
+                    "field_orders_by_entity": field_orders_by_entity,
                     "facts_by_entity": facts_by_entity,
                 }
             )
@@ -263,6 +394,7 @@ def resolve_config(
             **config.__dict__,
             "use_slot_balance_loss": bool(args.slot_balance_loss and config.use_slot_routing),
             "slot_balance_weight": args.slot_balance_weight,
+            "use_top1_routing": bool(args.top1_routing and config.use_slot_routing),
         }
     )
     return config
@@ -363,9 +495,37 @@ def evaluate_variant(
                         "slot_balance_loss": float(out.slot_balance_loss.item()),
                         "attractor_distance": attractor_distance,
                         "entity_names": metadata.get("entity_names"),
+                        "entity_count": metadata.get("entity_count"),
                         "query_name": metadata.get("query_name"),
+                        "query_name_initial": metadata.get("query_name_initial"),
+                        "query_entity_index": metadata.get("query_entity_index"),
+                        "query_entity_bucket": metadata.get("query_entity_bucket"),
                         "query_field": metadata.get("query_field"),
+                        "query_field_index": metadata.get("query_field_index"),
                         "answer_value": metadata.get("answer_value"),
+                        "answer_first_token": metadata.get("answer_first_token"),
+                        "field_order_mode": metadata.get("field_order_mode"),
+                        "remember_position_mode": metadata.get("remember_position_mode"),
+                        "remember_token_index": metadata.get("remember_token_index"),
+                        "fact_tokens_start": metadata.get("fact_tokens_start"),
+                        "fact_tokens_end": metadata.get("fact_tokens_end"),
+                        "context_token_index": metadata.get("context_token_index"),
+                        "prefix_noise_length": metadata.get("prefix_noise_length"),
+                        "suffix_noise_length": metadata.get("suffix_noise_length"),
+                        "question_token_index": metadata.get("question_token_index"),
+                        "query_name_token_index": metadata.get("query_name_token_index"),
+                        "query_field_token_index": metadata.get("query_field_token_index"),
+                        "answer_token_start": metadata.get("answer_token_start"),
+                        "answer_token_end": metadata.get("answer_token_end"),
+                        "query_entity_token_start": metadata.get("query_entity_token_start"),
+                        "query_entity_token_end": metadata.get("query_entity_token_end"),
+                        "query_fact_token_start": metadata.get("query_fact_token_start"),
+                        "query_fact_token_end": metadata.get("query_fact_token_end"),
+                        "query_fact_position_ratio": metadata.get("query_fact_position_ratio"),
+                        "query_fact_position_bucket": metadata.get("query_fact_position_bucket"),
+                        "entity_spans": metadata.get("entity_spans"),
+                        "fact_spans": metadata.get("fact_spans"),
+                        "field_orders_by_entity": metadata.get("field_orders_by_entity"),
                         "facts_by_entity": metadata.get("facts_by_entity"),
                     }
                 )
@@ -413,6 +573,9 @@ def maybe_write_core_trace(
         "entities_per_sample": task_spec.entities_per_sample,
         "fields": task_spec.fields,
         "value_length": task_spec.value_length,
+        "top1_routing": bool(args.top1_routing),
+        "field_order_mode": args.field_order_mode,
+        "remember_position_mode": args.remember_position_mode,
         "trace_entries": trace_entries,
     }
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -439,6 +602,8 @@ def train_variant(
         seed=args.seed,
         tokenizer=tokenizer,
         task_spec=task_spec,
+        field_order_mode=args.field_order_mode,
+        remember_position_mode=args.remember_position_mode,
     )
     val_dataset = DelayedRecallDataset(
         num_samples=args.val_samples,
@@ -447,6 +612,8 @@ def train_variant(
         seed=args.seed + 10_000,
         tokenizer=tokenizer,
         task_spec=task_spec,
+        field_order_mode=args.field_order_mode,
+        remember_position_mode=args.remember_position_mode,
     )
     effective_batch_size = resolve_effective_batch_size(args, train_dataset.sequence_length)
     train_loader = build_loader(train_dataset, effective_batch_size, shuffle=True, seed=args.seed)
@@ -692,6 +859,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--entities-per-sample", type=int, default=3)
     parser.add_argument("--fields", nargs="+", default=["age", "city", "color"])
     parser.add_argument("--noise-vocab-size", type=int, default=64)
+    parser.add_argument("--field-order-mode", choices=["fixed", "shuffled"], default="fixed")
+    parser.add_argument("--remember-position-mode", choices=["front", "middle", "back", "random"], default="front")
     parser.add_argument("--save-core-traces", action="store_true")
     parser.add_argument("--trace-batches", type=int, default=2)
     parser.add_argument("--trace-examples", type=int, default=2)
@@ -711,6 +880,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--drift-weight", type=float, default=0.001)
     parser.add_argument("--slot-balance-loss", action="store_true")
     parser.add_argument("--slot-balance-weight", type=float, default=0.01)
+    parser.add_argument("--top1-routing", action="store_true")
     parser.add_argument("--eval-interval", type=int, default=250)
     parser.add_argument("--log-interval", type=int, default=20)
     parser.add_argument(

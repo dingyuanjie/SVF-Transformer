@@ -1,0 +1,105 @@
+{
+  "timestamp": "2026-06-07T12:05:51",
+  "task": "delayed_recall",
+  "task_type": "multi_entity",
+  "entities_per_sample": 4,
+  "fields": [
+    "age",
+    "city",
+    "color"
+  ],
+  "value_length": 1,
+  "variants": [
+    "specialized_core"
+  ],
+  "delays": [
+    8
+  ],
+  "seeds": [
+    42
+  ],
+  "args": {
+    "variants": [
+      "specialized_core"
+    ],
+    "task_type": "multi_entity",
+    "delays": [
+      8
+    ],
+    "seeds": [
+      42
+    ],
+    "steps": 2,
+    "batch_size": 4,
+    "adaptive_batch_size": true,
+    "adaptive_batch_reference_seq_len": 1024,
+    "train_samples": 16,
+    "val_samples": 8,
+    "value_length": 1,
+    "entities_per_sample": 4,
+    "fields": [
+      "age",
+      "city",
+      "color"
+    ],
+    "noise_vocab_size": 8,
+    "field_order_mode": "shuffled",
+    "remember_position_mode": "random",
+    "save_core_traces": true,
+    "trace_batches": 1,
+    "trace_examples": 2,
+    "d_model": 32,
+    "d_ff": 64,
+    "layers": 1,
+    "heads": 4,
+    "dropout": 0.1,
+    "lr": 0.0003,
+    "weight_decay": 0.01,
+    "grad_clip": 1.0,
+    "core_slots": 4,
+    "memory_size": 256,
+    "attractor_strength": 0.05,
+    "drift_scale": 0.1,
+    "conservation_weight": 0.01,
+    "drift_weight": 0.001,
+    "slot_balance_loss": false,
+    "slot_balance_weight": 0.01,
+    "top1_routing": false,
+    "eval_interval": 250,
+    "log_interval": 20,
+    "match_baseline_to": "persistent_core",
+    "device": "cpu",
+    "output_dir": "outputs/experiments/smoke_position_perturbation",
+    "seed": 42
+  },
+  "tokenizer_vocab_size": 42,
+  "artifacts": {
+    "summary_json": "outputs\\experiments\\smoke_position_perturbation\\recall_summary_20260607_120551.json",
+    "summary_csv": "outputs\\experiments\\smoke_position_perturbation\\recall_summary_20260607_120551.csv",
+    "aggregate_json": "outputs\\experiments\\smoke_position_perturbation\\recall_aggregate_20260607_120551.json",
+    "aggregate_csv": "outputs\\experiments\\smoke_position_perturbation\\recall_aggregate_20260607_120551.csv"
+  },
+  "results": [
+    {
+      "task_type": "multi_entity",
+      "delay_tokens": 8,
+      "variant": "specialized_core",
+      "seed": 42,
+      "steps": 2,
+      "parameter_count": 33952,
+      "final_train_loss": 20.178298950195312,
+      "final_val_loss": 20.059040069580078,
+      "final_val_ce_loss": 20.04954719543457,
+      "final_answer_token_accuracy": 0.0,
+      "final_answer_exact_accuracy": 0.0,
+      "final_val_structural_energy": 0.004257492255419493,
+      "final_val_drift_loss": 0.0,
+      "final_core_norm_mean": 0.3690677136182785,
+      "final_core_slot_norm_std": 0.00524426787160337,
+      "final_attractor_distance": 0.06524904817342758,
+      "final_slot_diversity_loss": 0.9493298530578613,
+      "final_slot_balance_loss": 0.0,
+      "core_trace_path": "outputs\\experiments\\smoke_position_perturbation\\core_traces\\delay8_specialized_core_seed42.json"
+    }
+  ]
+}

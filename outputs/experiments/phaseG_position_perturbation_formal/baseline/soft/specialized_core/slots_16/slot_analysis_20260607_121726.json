@@ -1,0 +1,36 @@
+[
+  {
+    "delay_tokens": 32,
+    "variant": "specialized_core",
+    "seed": 42,
+    "trace_count": 32,
+    "slot_count": 16,
+    "slot_usage_entropy": -0.0,
+    "normalized_slot_usage_entropy": -0.0,
+    "dominant_slot_fraction": 1.0,
+    "mean_slot_routing_entropy": 1.5949432095477114,
+    "mean_slot_read_entropy": 5.0201365862588053e-08,
+    "mean_offdiag_cosine": 0.9384099526855495,
+    "max_offdiag_cosine": 0.998947374995623,
+    "min_offdiag_cosine": 0.7463233536416077,
+    "mean_slot_norm_std": 1.7228319875948155,
+    "mean_core_norm": 1.5818515494465828
+  },
+  {
+    "delay_tokens": 32,
+    "variant": "specialized_core",
+    "seed": 43,
+    "trace_count": 32,
+    "slot_count": 16,
+    "slot_usage_entropy": -0.0,
+    "normalized_slot_usage_entropy": -0.0,
+    "dominant_slot_fraction": 1.0,
+    "mean_slot_routing_entropy": 1.11336674143147,
+    "mean_slot_read_entropy": 1.1626459742137926e-08,
+    "mean_offdiag_cosine": 0.8919037025708805,
+    "max_offdiag_cosine": 0.9987400516289648,
+    "min_offdiag_cosine": 0.6766585609818958,
+    "mean_slot_norm_std": 1.7078434518196661,
+    "mean_core_norm": 1.4238829985260963
+  }
+]

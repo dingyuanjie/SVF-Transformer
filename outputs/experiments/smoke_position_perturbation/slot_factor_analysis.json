@@ -1,0 +1,373 @@
+{
+  "trace_dir": "outputs\\experiments\\smoke_position_perturbation\\core_traces",
+  "trace_files": 1,
+  "trace_entries": 2,
+  "slot_count": 4,
+  "active_write_slots": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "active_read_slots": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "dominant_write_slot_fractions": [
+    0.0,
+    0.0,
+    1.0,
+    0.0
+  ],
+  "dominant_read_slot_fractions": [
+    0.0,
+    0.5,
+    0.0,
+    0.5
+  ],
+  "mean_write_slot_weights": [
+    0.24929226189892167,
+    0.2496537342660871,
+    0.25078028440480665,
+    0.25027371943018456
+  ],
+  "mean_read_slot_weights": [
+    0.2499584294838345,
+    0.25004952773658673,
+    0.24992104246819202,
+    0.25007100031138674
+  ],
+  "write_top_factors": [
+    {
+      "name": "answer_digit_sum_parity",
+      "num_values": 1,
+      "predictability": 1.0,
+      "baseline_accuracy": 1.0,
+      "gain_over_baseline": 0.0,
+      "mutual_information": 0.0,
+      "normalized_mutual_information": 0.0,
+      "values": [
+        {
+          "value": "even",
+          "count": 2,
+          "dominant_slot": 2,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "answer_first_token",
+      "num_values": 2,
+      "predictability": 1.0,
+      "baseline_accuracy": 1.0,
+      "gain_over_baseline": 0.0,
+      "mutual_information": 0.0,
+      "normalized_mutual_information": 0.0,
+      "values": [
+        {
+          "value": "2",
+          "count": 1,
+          "dominant_slot": 2,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "value": "8",
+          "count": 1,
+          "dominant_slot": 2,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "answer_value",
+      "num_values": 2,
+      "predictability": 1.0,
+      "baseline_accuracy": 1.0,
+      "gain_over_baseline": 0.0,
+      "mutual_information": 0.0,
+      "normalized_mutual_information": 0.0,
+      "values": [
+        {
+          "value": "2",
+          "count": 1,
+          "dominant_slot": 2,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "value": "8",
+          "count": 1,
+          "dominant_slot": 2,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "entity_count",
+      "num_values": 1,
+      "predictability": 1.0,
+      "baseline_accuracy": 1.0,
+      "gain_over_baseline": 0.0,
+      "mutual_information": 0.0,
+      "normalized_mutual_information": 0.0,
+      "values": [
+        {
+          "value": "4",
+          "count": 2,
+          "dominant_slot": 2,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "field_order_mode",
+      "num_values": 1,
+      "predictability": 1.0,
+      "baseline_accuracy": 1.0,
+      "gain_over_baseline": 0.0,
+      "mutual_information": 0.0,
+      "normalized_mutual_information": 0.0,
+      "values": [
+        {
+          "value": "shuffled",
+          "count": 2,
+          "dominant_slot": 2,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      ]
+    }
+  ],
+  "read_top_factors": [
+    {
+      "name": "answer_first_token",
+      "num_values": 2,
+      "predictability": 1.0,
+      "baseline_accuracy": 0.5,
+      "gain_over_baseline": 0.5,
+      "mutual_information": 1.0,
+      "normalized_mutual_information": 1.0,
+      "values": [
+        {
+          "value": "2",
+          "count": 1,
+          "dominant_slot": 1,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "value": "8",
+          "count": 1,
+          "dominant_slot": 3,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "answer_value",
+      "num_values": 2,
+      "predictability": 1.0,
+      "baseline_accuracy": 0.5,
+      "gain_over_baseline": 0.5,
+      "mutual_information": 1.0,
+      "normalized_mutual_information": 1.0,
+      "values": [
+        {
+          "value": "2",
+          "count": 1,
+          "dominant_slot": 1,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "value": "8",
+          "count": 1,
+          "dominant_slot": 3,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "prefix_noise_length",
+      "num_values": 2,
+      "predictability": 1.0,
+      "baseline_accuracy": 0.5,
+      "gain_over_baseline": 0.5,
+      "mutual_information": 1.0,
+      "normalized_mutual_information": 1.0,
+      "values": [
+        {
+          "value": "5",
+          "count": 1,
+          "dominant_slot": 3,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "value": "6",
+          "count": 1,
+          "dominant_slot": 1,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "query_entity_index",
+      "num_values": 2,
+      "predictability": 1.0,
+      "baseline_accuracy": 0.5,
+      "gain_over_baseline": 0.5,
+      "mutual_information": 1.0,
+      "normalized_mutual_information": 1.0,
+      "values": [
+        {
+          "value": "0",
+          "count": 1,
+          "dominant_slot": 1,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "value": "1",
+          "count": 1,
+          "dominant_slot": 3,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "query_entity_parity",
+      "num_values": 2,
+      "predictability": 1.0,
+      "baseline_accuracy": 0.5,
+      "gain_over_baseline": 0.5,
+      "mutual_information": 1.0,
+      "normalized_mutual_information": 1.0,
+      "values": [
+        {
+          "value": "even",
+          "count": 1,
+          "dominant_slot": 1,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "value": "odd",
+          "count": 1,
+          "dominant_slot": 3,
+          "dominant_fraction": 1.0,
+          "slot_fractions": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "task_type": "multi_entity",
+    "delay_tokens": 8,
+    "variant": "specialized_core",
+    "seed": 42,
+    "fields": [
+      "age",
+      "city",
+      "color"
+    ],
+    "value_length": 1,
+    "top1_routing": false
+  }
+}

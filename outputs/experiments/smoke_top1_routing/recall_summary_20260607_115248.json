@@ -1,0 +1,23 @@
+[
+  {
+    "task_type": "multi_entity",
+    "delay_tokens": 8,
+    "variant": "specialized_core",
+    "seed": 42,
+    "steps": 2,
+    "parameter_count": 33376,
+    "final_train_loss": 19.78765296936035,
+    "final_val_loss": 19.940686225891113,
+    "final_val_ce_loss": 19.9332275390625,
+    "final_answer_token_accuracy": 0.0,
+    "final_answer_exact_accuracy": 0.0,
+    "final_val_structural_energy": 0.003910430357791483,
+    "final_val_drift_loss": 0.0,
+    "final_core_norm_mean": 0.3512266278266907,
+    "final_core_slot_norm_std": 0.046783797442913055,
+    "final_attractor_distance": 0.06253216974437237,
+    "final_slot_diversity_loss": 0.7458317577838898,
+    "final_slot_balance_loss": 0.0,
+    "core_trace_path": "outputs\\experiments\\smoke_top1_routing\\core_traces\\delay8_specialized_core_seed42.json"
+  }
+]

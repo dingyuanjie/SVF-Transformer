@@ -1,0 +1,462 @@
+[
+  {
+    "delay_tokens": 32,
+    "variant": "specialized_core",
+    "runs": 2,
+    "slot_count": 4,
+    "mean_normalized_slot_usage_entropy": 0.0,
+    "mean_dominant_slot_fraction": 1.0,
+    "mean_slot_routing_entropy": 0.3796465685508826,
+    "mean_slot_read_entropy": 4.0721290875946686e-07,
+    "mean_offdiag_cosine": 0.7861574834388818,
+    "mean_slot_norm_std": 2.9748299958020157,
+    "dominant_write_slot_fractions": [
+      0.5,
+      0.0,
+      0.0,
+      0.5
+    ],
+    "mean_write_slot_weights": [
+      0.5008027579182157,
+      0.023086323980492977,
+      0.007586779481677742,
+      0.4685241386196136
+    ],
+    "dominant_read_slot_fractions": [
+      0.5,
+      0.0,
+      0.0,
+      0.5
+    ],
+    "mean_read_slot_weights": [
+      0.5000000137785805,
+      7.072313274615547e-10,
+      1.190315060957113e-10,
+      0.4999999853951566
+    ],
+    "query_name_write_summary": {
+      "alice": {
+        "counts": [
+          3,
+          0,
+          0,
+          2
+        ],
+        "fractions": [
+          0.6,
+          0.0,
+          0.0,
+          0.4
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.6
+      },
+      "bob": {
+        "counts": [
+          4,
+          0,
+          0,
+          2
+        ],
+        "fractions": [
+          0.6666666666666666,
+          0.0,
+          0.0,
+          0.3333333333333333
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.6666666666666666
+      },
+      "carol": {
+        "counts": [
+          3,
+          0,
+          0,
+          3
+        ],
+        "fractions": [
+          0.5,
+          0.0,
+          0.0,
+          0.5
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.5
+      },
+      "dave": {
+        "counts": [
+          4,
+          0,
+          0,
+          2
+        ],
+        "fractions": [
+          0.6666666666666666,
+          0.0,
+          0.0,
+          0.3333333333333333
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.6666666666666666
+      },
+      "erin": {
+        "counts": [
+          3,
+          0,
+          0,
+          1
+        ],
+        "fractions": [
+          0.75,
+          0.0,
+          0.0,
+          0.25
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.75
+      },
+      "frank": {
+        "counts": [
+          4,
+          0,
+          0,
+          3
+        ],
+        "fractions": [
+          0.5714285714285714,
+          0.0,
+          0.0,
+          0.42857142857142855
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.5714285714285714
+      },
+      "grace": {
+        "counts": [
+          1,
+          0,
+          0,
+          2
+        ],
+        "fractions": [
+          0.3333333333333333,
+          0.0,
+          0.0,
+          0.6666666666666666
+        ],
+        "dominant_slot": 3,
+        "dominant_fraction": 0.6666666666666666
+      },
+      "heidi": {
+        "counts": [
+          0,
+          0,
+          0,
+          3
+        ],
+        "fractions": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "dominant_slot": 3,
+        "dominant_fraction": 1.0
+      },
+      "ivan": {
+        "counts": [
+          3,
+          0,
+          0,
+          7
+        ],
+        "fractions": [
+          0.3,
+          0.0,
+          0.0,
+          0.7
+        ],
+        "dominant_slot": 3,
+        "dominant_fraction": 0.7
+      },
+      "judy": {
+        "counts": [
+          2,
+          0,
+          0,
+          1
+        ],
+        "fractions": [
+          0.6666666666666666,
+          0.0,
+          0.0,
+          0.3333333333333333
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.6666666666666666
+      },
+      "mallory": {
+        "counts": [
+          3,
+          0,
+          0,
+          4
+        ],
+        "fractions": [
+          0.42857142857142855,
+          0.0,
+          0.0,
+          0.5714285714285714
+        ],
+        "dominant_slot": 3,
+        "dominant_fraction": 0.5714285714285714
+      },
+      "niaj": {
+        "counts": [
+          2,
+          0,
+          0,
+          2
+        ],
+        "fractions": [
+          0.5,
+          0.0,
+          0.0,
+          0.5
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.5
+      }
+    },
+    "query_name_read_summary": {
+      "alice": {
+        "counts": [
+          3,
+          0,
+          0,
+          2
+        ],
+        "fractions": [
+          0.6,
+          0.0,
+          0.0,
+          0.4
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.6
+      },
+      "bob": {
+        "counts": [
+          4,
+          0,
+          0,
+          2
+        ],
+        "fractions": [
+          0.6666666666666666,
+          0.0,
+          0.0,
+          0.3333333333333333
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.6666666666666666
+      },
+      "carol": {
+        "counts": [
+          3,
+          0,
+          0,
+          3
+        ],
+        "fractions": [
+          0.5,
+          0.0,
+          0.0,
+          0.5
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.5
+      },
+      "dave": {
+        "counts": [
+          4,
+          0,
+          0,
+          2
+        ],
+        "fractions": [
+          0.6666666666666666,
+          0.0,
+          0.0,
+          0.3333333333333333
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.6666666666666666
+      },
+      "erin": {
+        "counts": [
+          3,
+          0,
+          0,
+          1
+        ],
+        "fractions": [
+          0.75,
+          0.0,
+          0.0,
+          0.25
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.75
+      },
+      "frank": {
+        "counts": [
+          4,
+          0,
+          0,
+          3
+        ],
+        "fractions": [
+          0.5714285714285714,
+          0.0,
+          0.0,
+          0.42857142857142855
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.5714285714285714
+      },
+      "grace": {
+        "counts": [
+          1,
+          0,
+          0,
+          2
+        ],
+        "fractions": [
+          0.3333333333333333,
+          0.0,
+          0.0,
+          0.6666666666666666
+        ],
+        "dominant_slot": 3,
+        "dominant_fraction": 0.6666666666666666
+      },
+      "heidi": {
+        "counts": [
+          0,
+          0,
+          0,
+          3
+        ],
+        "fractions": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "dominant_slot": 3,
+        "dominant_fraction": 1.0
+      },
+      "ivan": {
+        "counts": [
+          3,
+          0,
+          0,
+          7
+        ],
+        "fractions": [
+          0.3,
+          0.0,
+          0.0,
+          0.7
+        ],
+        "dominant_slot": 3,
+        "dominant_fraction": 0.7
+      },
+      "judy": {
+        "counts": [
+          2,
+          0,
+          0,
+          1
+        ],
+        "fractions": [
+          0.6666666666666666,
+          0.0,
+          0.0,
+          0.3333333333333333
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.6666666666666666
+      },
+      "mallory": {
+        "counts": [
+          3,
+          0,
+          0,
+          4
+        ],
+        "fractions": [
+          0.42857142857142855,
+          0.0,
+          0.0,
+          0.5714285714285714
+        ],
+        "dominant_slot": 3,
+        "dominant_fraction": 0.5714285714285714
+      },
+      "niaj": {
+        "counts": [
+          2,
+          0,
+          0,
+          2
+        ],
+        "fractions": [
+          0.5,
+          0.0,
+          0.0,
+          0.5
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.5
+      }
+    },
+    "query_field_write_summary": {
+      "color": {
+        "counts": [
+          32,
+          0,
+          0,
+          32
+        ],
+        "fractions": [
+          0.5,
+          0.0,
+          0.0,
+          0.5
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.5
+      }
+    },
+    "query_field_read_summary": {
+      "color": {
+        "counts": [
+          32,
+          0,
+          0,
+          32
+        ],
+        "fractions": [
+          0.5,
+          0.0,
+          0.0,
+          0.5
+        ],
+        "dominant_slot": 0,
+        "dominant_fraction": 0.5
+      }
+    }
+  }
+]

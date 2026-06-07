@@ -185,3 +185,26 @@ def test_specialized_core_balance_loss_contributes_to_total_loss():
         out.loss,
         out.ce_loss + config.slot_diversity_weight * out.slot_diversity_loss + config.slot_balance_weight * out.slot_balance_loss,
     )
+
+
+def test_specialized_core_top1_routing_uses_one_hot_write_assignments():
+    base = SVFTransformerConfig(
+        vocab_size=32,
+        d_model=32,
+        n_heads=4,
+        n_layers=2,
+        d_ff=64,
+        max_seq_len=16,
+    )
+    config = build_config_for_variant(base, "specialized_core")
+    config.use_top1_routing = True
+    model = SVFTransformer(config)
+    x = torch.randint(0, config.vocab_size, (3, 16))
+    y = torch.randint(0, config.vocab_size, (3, 16))
+
+    out = model(x, targets=y, use_memory=config.use_memory, write_memory=config.use_memory)
+
+    assert out.slot_routing_weights is not None
+    assert torch.allclose(out.slot_routing_weights.sum(dim=-1), torch.ones(3), atol=1e-5)
+    assert torch.all((out.slot_routing_weights == 0.0) | (out.slot_routing_weights == 1.0))
+    assert torch.all(out.slot_routing_weights.max(dim=-1).values == 1.0)

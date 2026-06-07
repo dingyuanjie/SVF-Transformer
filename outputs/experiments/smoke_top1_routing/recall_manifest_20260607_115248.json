@@ -1,0 +1,99 @@
+{
+  "timestamp": "2026-06-07T11:52:48",
+  "task": "delayed_recall",
+  "task_type": "multi_entity",
+  "entities_per_sample": 4,
+  "fields": [
+    "color"
+  ],
+  "value_length": 1,
+  "variants": [
+    "specialized_core"
+  ],
+  "delays": [
+    8
+  ],
+  "seeds": [
+    42
+  ],
+  "args": {
+    "variants": [
+      "specialized_core"
+    ],
+    "task_type": "multi_entity",
+    "delays": [
+      8
+    ],
+    "seeds": [
+      42
+    ],
+    "steps": 2,
+    "batch_size": 4,
+    "adaptive_batch_size": true,
+    "adaptive_batch_reference_seq_len": 1024,
+    "train_samples": 16,
+    "val_samples": 8,
+    "value_length": 1,
+    "entities_per_sample": 4,
+    "fields": [
+      "color"
+    ],
+    "noise_vocab_size": 8,
+    "save_core_traces": true,
+    "trace_batches": 1,
+    "trace_examples": 2,
+    "d_model": 32,
+    "d_ff": 64,
+    "layers": 1,
+    "heads": 4,
+    "dropout": 0.1,
+    "lr": 0.0003,
+    "weight_decay": 0.01,
+    "grad_clip": 1.0,
+    "core_slots": 4,
+    "memory_size": 256,
+    "attractor_strength": 0.05,
+    "drift_scale": 0.1,
+    "conservation_weight": 0.01,
+    "drift_weight": 0.001,
+    "slot_balance_loss": false,
+    "slot_balance_weight": 0.01,
+    "top1_routing": true,
+    "eval_interval": 250,
+    "log_interval": 20,
+    "match_baseline_to": "persistent_core",
+    "device": "cpu",
+    "output_dir": "outputs/experiments/smoke_top1_routing",
+    "seed": 42
+  },
+  "tokenizer_vocab_size": 40,
+  "artifacts": {
+    "summary_json": "outputs\\experiments\\smoke_top1_routing\\recall_summary_20260607_115248.json",
+    "summary_csv": "outputs\\experiments\\smoke_top1_routing\\recall_summary_20260607_115248.csv",
+    "aggregate_json": "outputs\\experiments\\smoke_top1_routing\\recall_aggregate_20260607_115248.json",
+    "aggregate_csv": "outputs\\experiments\\smoke_top1_routing\\recall_aggregate_20260607_115248.csv"
+  },
+  "results": [
+    {
+      "task_type": "multi_entity",
+      "delay_tokens": 8,
+      "variant": "specialized_core",
+      "seed": 42,
+      "steps": 2,
+      "parameter_count": 33376,
+      "final_train_loss": 19.78765296936035,
+      "final_val_loss": 19.940686225891113,
+      "final_val_ce_loss": 19.9332275390625,
+      "final_answer_token_accuracy": 0.0,
+      "final_answer_exact_accuracy": 0.0,
+      "final_val_structural_energy": 0.003910430357791483,
+      "final_val_drift_loss": 0.0,
+      "final_core_norm_mean": 0.3512266278266907,
+      "final_core_slot_norm_std": 0.046783797442913055,
+      "final_attractor_distance": 0.06253216974437237,
+      "final_slot_diversity_loss": 0.7458317577838898,
+      "final_slot_balance_loss": 0.0,
+      "core_trace_path": "outputs\\experiments\\smoke_top1_routing\\core_traces\\delay8_specialized_core_seed42.json"
+    }
+  ]
+}
