@@ -1,0 +1,186 @@
+{
+  "checkpoint_path": "outputs\\experiments\\smoke_counterfactual_replay\\checkpoints\\delay8_specialized_core_seed42_best.pt",
+  "variant": "specialized_core",
+  "delay_tokens": 8,
+  "step": 20,
+  "task_spec": {
+    "task_type": "multi_entity",
+    "entities_per_sample": 4,
+    "fields": [
+      "color",
+      "city",
+      "age",
+      "job"
+    ],
+    "value_length": 1
+  },
+  "metadata": {
+    "field_order_mode": "fixed",
+    "remember_position_mode": "front",
+    "top1_routing": false,
+    "core_slots": 16
+  },
+  "samples_evaluated": 8,
+  "total_counterfactuals": 72,
+  "write_slot_same_rate": 0.7777777777777778,
+  "read_slot_same_rate": 0.9166666666666666,
+  "write_mean_l1_delta": 0.00022799930431776575,
+  "read_mean_l1_delta": 0.00011806096881628036,
+  "per_field": {
+    "job": {
+      "counterfactuals": 36.0,
+      "write_slot_same": 32.0,
+      "read_slot_same": 31.0,
+      "write_slot_same_rate": 0.8888888888888888,
+      "read_slot_same_rate": 0.8611111111111112
+    },
+    "city": {
+      "counterfactuals": 27.0,
+      "write_slot_same": 15.0,
+      "read_slot_same": 27.0,
+      "write_slot_same_rate": 0.5555555555555556,
+      "read_slot_same_rate": 1.0
+    },
+    "age": {
+      "counterfactuals": 9.0,
+      "write_slot_same": 9.0,
+      "read_slot_same": 8.0,
+      "write_slot_same_rate": 1.0,
+      "read_slot_same_rate": 0.8888888888888888
+    }
+  },
+  "examples": [
+    {
+      "dataset_index": 1,
+      "query_name": "frank",
+      "query_field": "city",
+      "original_value": "8",
+      "counterfactual_value": "1",
+      "original_write_slot": 0,
+      "counterfactual_write_slot": 12,
+      "original_read_slot": 14,
+      "counterfactual_read_slot": 14
+    },
+    {
+      "dataset_index": 1,
+      "query_name": "frank",
+      "query_field": "city",
+      "original_value": "8",
+      "counterfactual_value": "3",
+      "original_write_slot": 0,
+      "counterfactual_write_slot": 12,
+      "original_read_slot": 14,
+      "counterfactual_read_slot": 14
+    },
+    {
+      "dataset_index": 1,
+      "query_name": "frank",
+      "query_field": "city",
+      "original_value": "8",
+      "counterfactual_value": "4",
+      "original_write_slot": 0,
+      "counterfactual_write_slot": 12,
+      "original_read_slot": 14,
+      "counterfactual_read_slot": 14
+    },
+    {
+      "dataset_index": 1,
+      "query_name": "frank",
+      "query_field": "city",
+      "original_value": "8",
+      "counterfactual_value": "6",
+      "original_write_slot": 0,
+      "counterfactual_write_slot": 12,
+      "original_read_slot": 14,
+      "counterfactual_read_slot": 14
+    },
+    {
+      "dataset_index": 1,
+      "query_name": "frank",
+      "query_field": "city",
+      "original_value": "8",
+      "counterfactual_value": "7",
+      "original_write_slot": 0,
+      "counterfactual_write_slot": 2,
+      "original_read_slot": 14,
+      "counterfactual_read_slot": 14
+    },
+    {
+      "dataset_index": 1,
+      "query_name": "frank",
+      "query_field": "city",
+      "original_value": "8",
+      "counterfactual_value": "9",
+      "original_write_slot": 0,
+      "counterfactual_write_slot": 12,
+      "original_read_slot": 14,
+      "counterfactual_read_slot": 14
+    },
+    {
+      "dataset_index": 2,
+      "query_name": "frank",
+      "query_field": "job",
+      "original_value": "6",
+      "counterfactual_value": "0",
+      "original_write_slot": 12,
+      "counterfactual_write_slot": 0,
+      "original_read_slot": 14,
+      "counterfactual_read_slot": 14
+    },
+    {
+      "dataset_index": 2,
+      "query_name": "frank",
+      "query_field": "job",
+      "original_value": "6",
+      "counterfactual_value": "5",
+      "original_write_slot": 12,
+      "counterfactual_write_slot": 0,
+      "original_read_slot": 14,
+      "counterfactual_read_slot": 14
+    },
+    {
+      "dataset_index": 2,
+      "query_name": "frank",
+      "query_field": "job",
+      "original_value": "6",
+      "counterfactual_value": "9",
+      "original_write_slot": 12,
+      "counterfactual_write_slot": 12,
+      "original_read_slot": 14,
+      "counterfactual_read_slot": 5
+    },
+    {
+      "dataset_index": 3,
+      "query_name": "erin",
+      "query_field": "age",
+      "original_value": "5",
+      "counterfactual_value": "9",
+      "original_write_slot": 0,
+      "counterfactual_write_slot": 0,
+      "original_read_slot": 14,
+      "counterfactual_read_slot": 10
+    },
+    {
+      "dataset_index": 4,
+      "query_name": "frank",
+      "query_field": "job",
+      "original_value": "7",
+      "counterfactual_value": "9",
+      "original_write_slot": 0,
+      "counterfactual_write_slot": 12,
+      "original_read_slot": 14,
+      "counterfactual_read_slot": 14
+    },
+    {
+      "dataset_index": 5,
+      "query_name": "niaj",
+      "query_field": "job",
+      "original_value": "8",
+      "counterfactual_value": "1",
+      "original_write_slot": 0,
+      "counterfactual_write_slot": 0,
+      "original_read_slot": 5,
+      "counterfactual_read_slot": 14
+    }
+  ]
+}

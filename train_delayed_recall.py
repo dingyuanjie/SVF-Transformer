@@ -55,6 +55,8 @@ class TaskSpec:
 
 class SyntheticTokenizer:
     def __init__(self, noise_vocab_size: int, fields: list[str]) -> None:
+        self.noise_vocab_size = noise_vocab_size
+        self.fields = list(fields)
         tokens = SPECIAL_TOKENS + CONTROL_TOKENS + DIGIT_TOKENS + NAME_TOKENS + sorted(set(fields))
         tokens += [f"noise_{index}" for index in range(noise_vocab_size)]
         self.stoi = {token: index for index, token in enumerate(tokens)}
@@ -66,6 +68,16 @@ class SyntheticTokenizer:
 
     def encode(self, tokens: list[str]) -> list[int]:
         return [self.stoi[token] for token in tokens]
+
+    def decode(self, ids: list[int]) -> list[str]:
+        return [self.itos[int(token_id)] for token_id in ids]
+
+    def save_state(self) -> dict[str, Any]:
+        return {
+            "type": "synthetic",
+            "noise_vocab_size": self.noise_vocab_size,
+            "fields": self.fields,
+        }
 
 
 def serialize_fact_key(name: str, field: str) -> str:
@@ -319,6 +331,8 @@ class RecallResult:
     final_slot_diversity_loss: float
     final_slot_balance_loss: float
     core_trace_path: Optional[str]
+    checkpoint_path: Optional[str]
+    best_checkpoint_path: Optional[str]
 
 
 @dataclass
@@ -582,6 +596,36 @@ def maybe_write_core_trace(
     return path
 
 
+def save_checkpoint(
+    path: Path,
+    *,
+    model: SVFTransformer,
+    config: SVFTransformerConfig,
+    tokenizer: SyntheticTokenizer,
+    variant: str,
+    step: int,
+    metrics: RecallMetrics,
+    task_spec: TaskSpec,
+    delay_tokens: int,
+    run_args: dict[str, Any],
+) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(
+        {
+            "model": model.state_dict(),
+            "config": config.__dict__,
+            "variant": variant,
+            "step": step,
+            "metrics": asdict(metrics),
+            "tokenizer": tokenizer.save_state(),
+            "task_spec": asdict(task_spec),
+            "delay_tokens": delay_tokens,
+            "args": {**run_args, "delay_tokens": delay_tokens},
+        },
+        path,
+    )
+
+
 def train_variant(
     *,
     args: argparse.Namespace,
@@ -630,6 +674,8 @@ def train_variant(
     )
     step = 0
     final_train_loss = 0.0
+    best_val_loss = float("inf")
+    best_checkpoint_path: Optional[Path] = None
     model.train()
 
     while step < args.steps:
@@ -658,6 +704,24 @@ def train_variant(
                     f"answer_exact_acc={metrics.answer_exact_accuracy:.4f} "
                     f"core_norm={metrics.core_norm_mean:.4f}"
                 )
+                if args.save_checkpoints and metrics.loss < best_val_loss:
+                    best_val_loss = metrics.loss
+                    best_checkpoint_path = (
+                        Path(args.output_dir) / "checkpoints" / f"delay{delay_tokens}_{variant}_seed{args.seed}_best.pt"
+                    )
+                    save_checkpoint(
+                        best_checkpoint_path,
+                        model=model,
+                        config=config,
+                        tokenizer=tokenizer,
+                        variant=variant,
+                        step=step,
+                        metrics=metrics,
+                        task_spec=task_spec,
+                        delay_tokens=delay_tokens,
+                        run_args=vars(args).copy(),
+                    )
+                    print(f"saved best checkpoint to {best_checkpoint_path}")
             if step >= args.steps:
                 break
 
@@ -678,6 +742,22 @@ def train_variant(
         seed=args.seed,
         trace_entries=trace_entries,
     )
+    checkpoint_path: Optional[Path] = None
+    if args.save_checkpoints:
+        checkpoint_path = Path(args.output_dir) / "checkpoints" / f"delay{delay_tokens}_{variant}_seed{args.seed}_final.pt"
+        save_checkpoint(
+            checkpoint_path,
+            model=model,
+            config=config,
+            tokenizer=tokenizer,
+            variant=variant,
+            step=step,
+            metrics=final_metrics,
+            task_spec=task_spec,
+            delay_tokens=delay_tokens,
+            run_args=vars(args).copy(),
+        )
+        print(f"saved final checkpoint to {checkpoint_path}")
     return RecallResult(
         task_type=task_spec.task_type,
         delay_tokens=delay_tokens,
@@ -698,6 +778,8 @@ def train_variant(
         final_slot_diversity_loss=final_metrics.slot_diversity_loss,
         final_slot_balance_loss=final_metrics.slot_balance_loss,
         core_trace_path=str(trace_path) if trace_path is not None else None,
+        checkpoint_path=str(checkpoint_path) if checkpoint_path is not None else None,
+        best_checkpoint_path=str(best_checkpoint_path) if best_checkpoint_path is not None else None,
     )
 
 
@@ -862,6 +944,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--field-order-mode", choices=["fixed", "shuffled"], default="fixed")
     parser.add_argument("--remember-position-mode", choices=["front", "middle", "back", "random"], default="front")
     parser.add_argument("--save-core-traces", action="store_true")
+    parser.add_argument("--save-checkpoints", action="store_true")
     parser.add_argument("--trace-batches", type=int, default=2)
     parser.add_argument("--trace-examples", type=int, default=2)
     parser.add_argument("--d-model", type=int, default=128)
@@ -887,7 +970,16 @@ def parse_args() -> argparse.Namespace:
         "--match-baseline-to",
         type=str,
         default="persistent_core",
-        choices=["memory", "persistent_core", "memory_core", "svf"],
+        choices=[
+            "memory",
+            "persistent_core",
+            "core_dynamics",
+            "specialized_core",
+            "specialized_core_dynamics",
+            "memory_core",
+            "svf",
+            "specialized_svf",
+        ],
     )
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--output-dir", type=str, default="outputs/experiments/phaseD_delayed_recall")

@@ -1,0 +1,60 @@
+{
+  "checkpoint_path": "outputs\\experiments\\phaseG_counterfactual_replay_formal\\shuffle_fields_slots16\\checkpoints\\delay32_specialized_core_seed43_best.pt",
+  "variant": "specialized_core",
+  "delay_tokens": 32,
+  "step": 300,
+  "task_spec": {
+    "task_type": "multi_entity",
+    "entities_per_sample": 4,
+    "fields": [
+      "color",
+      "city",
+      "age",
+      "job"
+    ],
+    "value_length": 1
+  },
+  "metadata": {
+    "field_order_mode": "shuffled",
+    "remember_position_mode": "front",
+    "top1_routing": false,
+    "core_slots": 16
+  },
+  "samples_evaluated": 64,
+  "total_counterfactuals": 576,
+  "write_slot_same_rate": 1.0,
+  "read_slot_same_rate": 1.0,
+  "write_mean_l1_delta": 0.004644666563055782,
+  "read_mean_l1_delta": 1.2415151316259822e-08,
+  "per_field": {
+    "age": {
+      "counterfactuals": 189.0,
+      "write_slot_same": 189.0,
+      "read_slot_same": 189.0,
+      "write_slot_same_rate": 1.0,
+      "read_slot_same_rate": 1.0
+    },
+    "job": {
+      "counterfactuals": 117.0,
+      "write_slot_same": 117.0,
+      "read_slot_same": 117.0,
+      "write_slot_same_rate": 1.0,
+      "read_slot_same_rate": 1.0
+    },
+    "color": {
+      "counterfactuals": 171.0,
+      "write_slot_same": 171.0,
+      "read_slot_same": 171.0,
+      "write_slot_same_rate": 1.0,
+      "read_slot_same_rate": 1.0
+    },
+    "city": {
+      "counterfactuals": 99.0,
+      "write_slot_same": 99.0,
+      "read_slot_same": 99.0,
+      "write_slot_same_rate": 1.0,
+      "read_slot_same_rate": 1.0
+    }
+  },
+  "examples": []
+}
